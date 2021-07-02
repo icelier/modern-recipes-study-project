@@ -1,4 +1,4 @@
-package com.chari.ic.yourtodayrecipe
+package com.chari.ic.yourtodayrecipe.util
 
 class Constants {
     companion object {

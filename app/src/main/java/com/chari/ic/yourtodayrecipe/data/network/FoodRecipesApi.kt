@@ -1,4 +1,4 @@
-package com.chari.ic.yourtodayrecipe
+package com.chari.ic.yourtodayrecipe.data.network
 
 import com.chari.ic.yourtodayrecipe.model.FoodRecipe
 import retrofit2.Response

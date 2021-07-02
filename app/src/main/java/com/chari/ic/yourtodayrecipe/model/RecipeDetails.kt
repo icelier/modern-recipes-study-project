@@ -3,7 +3,7 @@ package com.chari.ic.yourtodayrecipe.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Result(
+data class RecipeDetails(
     @SerializedName("aggregateLikes")
     val aggregateLikes: Int,
     @SerializedName("cheap")

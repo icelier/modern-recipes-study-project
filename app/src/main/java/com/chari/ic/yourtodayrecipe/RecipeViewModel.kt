@@ -5,23 +5,36 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
 import com.chari.ic.yourtodayrecipe.data.Repository
-import com.chari.ic.yourtodayrecipe.model.FoodRecipe
+import com.chari.ic.yourtodayrecipe.data.database.entities.RecipeEntity
+import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
-
+private const val TAG = "RecipeViewModel"
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class RecipeViewModel @Inject constructor(
     private val repository: Repository,
     application: Application
 ): AndroidViewModel(application) {
-    val recipeResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
+    /* ROOM DATABASE */
+    val cachedRecipes: LiveData<List<RecipeEntity>> =
+        repository.localDataSource.findAll().asLiveData()
+
+    private fun insert(recipe: RecipeEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.localDataSource.insertRecipe(recipe)
+        }
+    }
+
+    /* RETROFIT NETWORK FETCHED DATA */
+    private val recipeResponse: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
+    val recipeSearchResult: LiveData<NetworkResult<RecipeResponse>> = recipeResponse
 
     fun getRecipes(queries: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(queries)
@@ -31,8 +44,14 @@ class MainViewModel @Inject constructor(
         recipeResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
             try {
-                val response = repository.remote.getRecipes(queries)
+                Log.d(TAG, "Internet connection present")
+                val response = repository.getRecipes(queries)
+                Log.d(TAG, "Handle response")
                 recipeResponse.value = handleFoodRecipeResponse(response)
+                val data = recipeResponse.value!!.data
+                if (data != null) {
+                    offlineCacheData(data)
+                }
             } catch (e: Exception) {
                 recipeResponse.value = NetworkResult.Error("Recipes not found")
             }
@@ -41,7 +60,13 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun handleFoodRecipeResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe> {
+    private fun offlineCacheData(data: RecipeResponse) {
+        val recipeEntity = RecipeEntity(data)
+        insert(recipeEntity)
+    }
+
+    private fun handleFoodRecipeResponse(response: Response<RecipeResponse>): NetworkResult<RecipeResponse> {
+        Log.d(TAG, "response: ${response.code()} and ${response.body()}")
         return when {
             response.message().toString().contains("timeout") ->
                 NetworkResult.Error("Timeout")
@@ -57,7 +82,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun hasInternetConnection(): Boolean {
+    private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<Application>()
             .getSystemService(
                 Context.CONNECTIVITY_SERVICE
@@ -85,7 +110,6 @@ class MainViewModel @Inject constructor(
             false
         }
 
-
-
+        return isNetworkActive
     }
 }

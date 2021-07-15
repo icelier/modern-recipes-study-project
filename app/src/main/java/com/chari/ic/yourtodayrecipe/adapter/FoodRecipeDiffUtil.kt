@@ -1,11 +1,11 @@
 package com.chari.ic.yourtodayrecipe.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.chari.ic.yourtodayrecipe.model.RecipeDetails
+import com.chari.ic.yourtodayrecipe.model.Recipe
 
 class FoodRecipeDiffUtil(
-    private val oldList: List<RecipeDetails>,
-    private val newList: List<RecipeDetails>
+    private val oldList: List<Recipe>,
+    private val newList: List<Recipe>
 ): DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldListSize

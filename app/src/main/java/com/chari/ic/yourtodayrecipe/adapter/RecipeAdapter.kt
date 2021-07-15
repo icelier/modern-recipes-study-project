@@ -5,16 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.chari.ic.yourtodayrecipe.databinding.RecipesItemLayoutBinding
-import com.chari.ic.yourtodayrecipe.model.RecipeDetails
+import com.chari.ic.yourtodayrecipe.model.Recipe
 import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 
 class RecipeAdapter : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
-    private var recipes = emptyList<RecipeDetails>()
+    private var recipes = emptyList<Recipe>()
 
     class RecipeViewHolder(private val binding: RecipesItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(recipe: RecipeDetails) {
+        fun bind(recipe: Recipe) {
           binding.recipe = recipe
             binding.executePendingBindings()
         }
@@ -47,15 +47,15 @@ class RecipeAdapter : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
         result.dispatchUpdatesTo(this)
     }
 
-//    object RecipeDiffUtilL: DiffUtil.ItemCallback<RecipeDetails>() {
-//        override fun areItemsTheSame(oldItem: RecipeDetails, newItem: RecipeDetails): Boolean {
-//            return oldItem.id == newItem.id
-//        }
-//
-//        override fun areContentsTheSame(oldItem: RecipeDetails, newItem: RecipeDetails): Boolean {
-//            return oldItem == newItem
-//        }
-//
-//    }
+    object RecipeDiffUtilL: DiffUtil.ItemCallback<Recipe>() {
+        override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
+            return oldItem == newItem
+        }
+
+    }
 
 }

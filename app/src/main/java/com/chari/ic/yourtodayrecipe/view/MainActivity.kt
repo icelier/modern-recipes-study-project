@@ -8,10 +8,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.chari.ic.yourtodayrecipe.R
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +30,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.recipesFragment, R.id.favouriteRecipesFragment, R.id.foodJokeFragment
             )
         )
-
-        bottomNavigationView.setupWithNavController(navController)
+        findViewById<BottomNavigationView>(R.id.bottom_nav).setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 

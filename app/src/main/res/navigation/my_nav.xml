@@ -7,17 +7,29 @@
 
     <fragment
         android:id="@+id/recipesFragment"
-        android:name="com.chari.ic.yourtodayrecipe.view.RecipesFragment"
+        android:name="com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipesFragment"
         android:label="@string/recipes"
-        tools:layout="@layout/fragment_recipes" />
+        tools:layout="@layout/fragment_recipes" >
+        <action
+            android:id="@+id/action_recipesFragment_to_recipeBottomSheet"
+            app:destination="@id/recipeBottomSheet" />
+    </fragment>
     <fragment
         android:id="@+id/favouriteRecipesFragment"
-        android:name="com.chari.ic.yourtodayrecipe.view.FavouriteRecipesFragment"
+        android:name="com.chari.ic.yourtodayrecipe.view.fragments.favoutites.FavouriteRecipesFragment"
         android:label="@string/favourites"
         tools:layout="@layout/fragment_favourite_recipes" />
     <fragment
         android:id="@+id/foodJokeFragment"
-        android:name="com.chari.ic.yourtodayrecipe.view.FoodJokeFragment"
+        android:name="com.chari.ic.yourtodayrecipe.view.fragments.foodjoke.FoodJokeFragment"
         android:label="@string/food_joke"
         tools:layout="@layout/fragment_food_joke" />
+    <dialog
+        android:id="@+id/recipeBottomSheet"
+        android:name="com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipeBottomSheet"
+        android:label="RecipeBottomSheet" >
+        <action
+            android:id="@+id/action_recipeBottomSheet_to_recipesFragment"
+            app:destination="@id/recipesFragment" />
+    </dialog>
 </navigation>

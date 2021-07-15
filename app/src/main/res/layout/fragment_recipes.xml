@@ -6,7 +6,7 @@
     <data>
         <variable
             name="recipeViewModel"
-            type="com.chari.ic.yourtodayrecipe.RecipeViewModel" />
+            type="com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,7 +59,7 @@
             android:visibility="gone" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_action_button"
+            android:id="@+id/recipes_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"

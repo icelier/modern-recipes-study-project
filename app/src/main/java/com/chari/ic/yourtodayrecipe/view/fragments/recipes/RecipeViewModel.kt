@@ -1,4 +1,4 @@
-package com.chari.ic.yourtodayrecipe
+package com.chari.ic.yourtodayrecipe.view.fragments.recipes
 
 import android.app.Application
 import android.content.Context

@@ -1,4 +1,4 @@
-package com.chari.ic.yourtodayrecipe.view
+package com.chari.ic.yourtodayrecipe.view.fragments.foodjoke
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

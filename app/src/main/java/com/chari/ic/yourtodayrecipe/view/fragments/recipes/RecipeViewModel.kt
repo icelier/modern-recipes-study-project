@@ -186,30 +186,17 @@ class RecipeViewModel @Inject constructor(
             .getSystemService(
                 Context.CONNECTIVITY_SERVICE
             ) as ConnectivityManager
-        if (connectivityManager == null) {
-            return false
-        }
-        val isNetworkActive = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            connectivityManager.activeNetwork ?: return false
-            val capabilities: NetworkCapabilities = connectivityManager.getNetworkCapabilities(
-                connectivityManager.activeNetwork
-            ) ?: return false
-            return when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            val activeNetwork = connectivityManager.activeNetworkInfo
-            if (activeNetwork?.type == ConnectivityManager.TYPE_WIFI ||
-                activeNetwork?.type == ConnectivityManager.TYPE_MOBILE) {
-                return true
-            }
-            false
-        }
 
-        return isNetworkActive
+        connectivityManager.activeNetwork ?: return false
+        val capabilities: NetworkCapabilities = connectivityManager.getNetworkCapabilities(
+            connectivityManager.activeNetwork
+        ) ?: return false
+        return when {
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
     }
 
     fun showNetworkStatus() {

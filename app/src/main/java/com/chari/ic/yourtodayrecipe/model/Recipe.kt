@@ -1,8 +1,11 @@
 package com.chari.ic.yourtodayrecipe.model
 
-
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
+@Parcelize
 data class Recipe (
     @SerializedName("aggregateLikes")
     val aggregateLikes: Int,
@@ -11,7 +14,7 @@ data class Recipe (
     @SerializedName("dairyFree")
     val dairyFree: Boolean,
     @SerializedName("extendedIngredients")
-    val extendedIngredients: List<Ingredient>,
+    val extendedIngredients: @RawValue List<Ingredient>,
     @SerializedName("glutenFree")
     val glutenFree: Boolean,
     @SerializedName("id")
@@ -34,4 +37,4 @@ data class Recipe (
     val vegetarian: Boolean,
     @SerializedName("veryHealthy")
     val veryHealthy: Boolean
-)
+): Parcelable

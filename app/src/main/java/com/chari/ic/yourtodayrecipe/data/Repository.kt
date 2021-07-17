@@ -21,4 +21,9 @@ class Repository @Inject constructor(
         Log.d(TAG, "Repository: getRecipes")
         return remoteDataSource.getRecipes(queries)
     }
+
+    suspend fun searchRecipes(searchQuery: Map<String, String>): Response<RecipeResponse> {
+        Log.d(TAG, "Repository: searchRecipes")
+        return remoteDataSource.searchRecipes(searchQuery)
+    }
 }

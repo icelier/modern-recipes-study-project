@@ -13,6 +13,7 @@
         android:id="@+id/recipes_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        onRecipeSelected="@{recipe}"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp">
 
@@ -59,11 +60,11 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/recipe_imageView"
+                    app:layout_constraintStart_toEndOf="@id/recipe_imageView"
                     app:layout_constraintTop_toTopOf="@id/recipe_imageView" />
 
                 <TextView
-                    android:id="@+id/description_textView"
+                    android:id="@+id/summary_textView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -84,7 +85,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/likes_textView"
                     app:layout_constraintStart_toStartOf="@id/likes_textView"
-                    app:layout_constraintTop_toBottomOf="@id/description_textView"
+                    app:layout_constraintTop_toBottomOf="@id/summary_textView"
                     app:srcCompat="@drawable/ic_favorites"
                     app:tint="@color/red" />
 
@@ -97,7 +98,7 @@
                     android:hint="100"
                     android:textColor="@color/red"
                     android:textAlignment="center"
-                    app:layout_constraintStart_toStartOf="@id/description_textView"
+                    app:layout_constraintStart_toStartOf="@id/summary_textView"
                     app:layout_constraintTop_toBottomOf="@id/likes_imageView" />
 
                 <ImageView

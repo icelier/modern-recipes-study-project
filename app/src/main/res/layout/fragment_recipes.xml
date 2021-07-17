@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="recipeViewModel"
+            name="viewmodel"
             type="com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipeViewModel" />
     </data>
 
@@ -77,13 +77,13 @@
             android:layout_height="100dp"
             android:alpha="0.5"
             android:src="@drawable/ic_error_sad"
-            apiResponse="@{recipeViewModel.recipeSearchResult}"
-            cachedState="@{recipeViewModel.cachedRecipes}"
+            apiResponse="@{viewmodel.recipesResult}"
+            cachedState="@{viewmodel.cachedRecipes}"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/shimmer_frame_layout"
+            app:layout_constraintBottom_toBottomOf="@id/shimmer_frame_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/shimmer_frame_layout"
+            app:layout_constraintTop_toTopOf="@id/shimmer_frame_layout"
             app:layout_constraintVertical_bias="0.45" />
 
         <TextView
@@ -93,12 +93,12 @@
             android:layout_marginTop="8dp"
             android:alpha="0.5"
             android:text="@string/sorry"
-            apiResponse="@{recipeViewModel.recipeSearchResult}"
-            cachedState="@{recipeViewModel.cachedRecipes}"
+            apiResponse="@{viewmodel.recipesResult}"
+            cachedState="@{viewmodel.cachedRecipes}"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/error_imageview"
+            app:layout_constraintEnd_toEndOf="@id/error_imageview"
             app:layout_constraintStart_toStartOf="@id/error_imageview"
             app:layout_constraintTop_toBottomOf="@id/error_imageview" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import coil.load
-import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.databinding.FragmentOverviewBinding
-import com.chari.ic.yourtodayrecipe.databinding.FragmentRecipesBinding
 import com.chari.ic.yourtodayrecipe.model.Recipe
-import com.chari.ic.yourtodayrecipe.view.KEY_RECIPE_BUNDLE
+import com.chari.ic.yourtodayrecipe.util.Constants.Companion.KEY_RECIPE_BUNDLE
 
 class OverviewFragment: Fragment() {
     private var bundle: Bundle? = null
@@ -40,15 +37,6 @@ class OverviewFragment: Fragment() {
         _binding = FragmentOverviewBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.recipe = currentRecipe
-
-//        val view = inflater.inflate(R.layout.fragment_overview, container, false)
-//        recipeImage = view.findViewById(R.id.main_imageView)
-//        titleTextView = view.findViewById(R.id.title_textView)
-//        summaryTextView = view.findViewById(R.id.summary_textView)
-//
-//        recipeImage.load(currentRecipe?.image)
-//        titleTextView.text = currentRecipe?.title
-//        summaryTextView.text = currentRecipe?.summary
 
         return binding.root
     }

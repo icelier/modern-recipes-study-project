@@ -11,11 +11,11 @@ import androidx.navigation.navArgs
 import androidx.viewpager.widget.ViewPager
 import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.adapter.RecipeDetailsPagerAdapter
+import com.chari.ic.yourtodayrecipe.util.Constants.Companion.KEY_RECIPE_BUNDLE
 import com.chari.ic.yourtodayrecipe.view.fragments.details.IngredientsFragment
 import com.chari.ic.yourtodayrecipe.view.fragments.details.InstructionsFragment
 import com.chari.ic.yourtodayrecipe.view.fragments.details.OverviewFragment
 
-const val KEY_RECIPE_BUNDLE = "recipeBundle"
 class RecipeDetailsActivity: AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var pager: ViewPager

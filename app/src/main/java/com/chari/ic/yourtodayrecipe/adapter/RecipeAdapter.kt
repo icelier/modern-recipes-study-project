@@ -8,7 +8,7 @@ import com.chari.ic.yourtodayrecipe.databinding.RecipesItemLayoutBinding
 import com.chari.ic.yourtodayrecipe.model.Recipe
 import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 
-class RecipeAdapter : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
+class RecipeAdapter: RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
     private var recipes = emptyList<Recipe>()
 
     class RecipeViewHolder(private val binding: RecipesItemLayoutBinding) :

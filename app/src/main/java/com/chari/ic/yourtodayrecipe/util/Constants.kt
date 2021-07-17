@@ -5,6 +5,7 @@ class Constants {
         // api
         const val API_KEY = "e59b72018cb44b90ace600cdc981f597"
         const val BASE_URL = "https://api.spoonacular.com/"
+        const val IMAGE_BASE_URL = "https://api.spoonacular.com/cdn/ingredients_100x100/"
 
         // database
         const val DATABASE_NAME = "recipes"
@@ -32,5 +33,8 @@ class Constants {
         const val SELECTED_DIET_TYPE_ID = "dietTypeId"
         const val BACK_ONLINE = "backIOnline"
         const val SEARCH_QUERY = "searchQuery"
+
+        // viewPager argument
+        const val KEY_RECIPE_BUNDLE = "recipeBundle"
     }
 }

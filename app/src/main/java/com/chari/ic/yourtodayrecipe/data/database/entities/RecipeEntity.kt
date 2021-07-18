@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 import com.chari.ic.yourtodayrecipe.util.Constants
 
-@Entity(tableName = Constants.TABLE_NAME)
+@Entity(tableName = Constants.RECIPES_TABLE_NAME)
 data class RecipeEntity(
     val recipe: RecipeResponse
 ) {
     @PrimaryKey(autoGenerate = false)
-    var id: Long = 0
+    var id: Long = 0L
 }

@@ -4,12 +4,12 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import com.chari.ic.yourtodayrecipe.data.DataStoreRepository
 import com.chari.ic.yourtodayrecipe.data.Repository
+import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
 import com.chari.ic.yourtodayrecipe.data.database.entities.RecipeEntity
 import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 import com.chari.ic.yourtodayrecipe.util.Constants
@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
+
 private const val TAG = "RecipeViewModel"
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
@@ -53,11 +54,32 @@ class RecipeViewModel @Inject constructor(
 
     /** ROOM DATABASE */
     val cachedRecipes: LiveData<List<RecipeEntity>> =
-        repository.localDataSource.findAll().asLiveData()
+        repository.localDataSource.findAllRecipes().asLiveData()
 
-    private fun insert(recipe: RecipeEntity) {
+    private fun insertRecipesResponse(recipesResponse: RecipeEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.localDataSource.insertRecipe(recipe)
+            repository.localDataSource.insertRecipe(recipesResponse)
+        }
+    }
+
+    val cachedFavouriteRecipes: LiveData<List<FavouritesEntity>> =
+        repository.localDataSource.findAllFavouriteRecipes().asLiveData()
+
+    fun insertFavouriteRecipe(favouriteRecipe: FavouritesEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.localDataSource.insertFavouriteRecipe(favouriteRecipe)
+        }
+    }
+
+    fun deleteFavouriteRecipe(favouriteRecipe: FavouritesEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.localDataSource.deleteFavouriteRecipe(favouriteRecipe)
+        }
+    }
+
+    fun deleteAllFavouriteRecipes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.localDataSource.deleteAllFavouriteRecipes()
         }
     }
 
@@ -89,15 +111,6 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    var searchQuery = ""
-
-    val storedSearchQuery = dataStoreRepository.readSearchQuery()
-
-    fun saveSearchQuery(searchQuery: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.writeSearchQuery(searchQuery)
-        }
-    }
 
     private val recipesSearch: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
     val recipesSearchResult: LiveData<NetworkResult<RecipeResponse>> = recipesSearch
@@ -161,7 +174,7 @@ class RecipeViewModel @Inject constructor(
 
     private fun offlineCacheData(data: RecipeResponse) {
         val recipeEntity = RecipeEntity(data)
-        insert(recipeEntity)
+        insertRecipesResponse(recipeEntity)
     }
 
     private fun handleFoodRecipeResponse(response: Response<RecipeResponse>): NetworkResult<RecipeResponse> {

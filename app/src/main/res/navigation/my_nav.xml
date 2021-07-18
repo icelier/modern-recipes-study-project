@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/favouriteRecipesFragment"
-        android:name="com.chari.ic.yourtodayrecipe.view.fragments.favoutites.FavouriteRecipesFragment"
+        android:name="com.chari.ic.yourtodayrecipe.view.fragments.favourites.FavouriteRecipesFragment"
         android:label="@string/favourites"
         tools:layout="@layout/fragment_favourite_recipes" />
     <fragment

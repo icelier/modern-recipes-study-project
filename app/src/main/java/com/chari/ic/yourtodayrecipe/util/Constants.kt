@@ -9,7 +9,8 @@ class Constants {
 
         // database
         const val DATABASE_NAME = "recipes"
-        const val TABLE_NAME = "recipes"
+        const val RECIPES_TABLE_NAME = "recipes"
+        const val FAVOURITES_TABLE_NAME = "favourites"
 
         // Bottom Sheet
         const val DEFAULT_MEAL_TYPE = "Main course"

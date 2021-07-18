@@ -52,8 +52,7 @@ class RecipesFragment : Fragment(),
 
         recyclerView = binding.recipeRecyclerView
         shimmerFrame = binding.shimmerFrameLayout
-//        recyclerView = mView.findViewById(R.id.recipe_recycler_view)
-//        shimmerFrame = mView.findViewById(R.id.shimmer_frame_layout)
+
          setHasOptionsMenu(true)
 
         return binding.root
@@ -75,33 +74,19 @@ class RecipesFragment : Fragment(),
 
         viewLifecycleOwner.lifecycleScope.launch {
             networkListener = NetworkListener()
-            // TODO - check if changes when switching network on/off
             networkListener.checkNetworkAvailability(requireContext())
                 .collect { status ->
                     Log.d(TAG, "Network available: $status")
                     recipeViewModel.networkStatus = status
                     recipeViewModel.showNetworkStatus()
-                    if (recipeViewModel.searchQuery.isNullOrBlank()) {
-                        loadCachedData()
-                    } else {
-                        searchRecipes(recipeViewModel.searchQuery)
-                    }
+                    loadCachedData()
+
                 }
         }
 
         recipeViewModel.storedBackOnline.asLiveData().observe(viewLifecycleOwner) {
             Log.d(TAG, " BackOnline liveData got updated: backOnline became $it")
             recipeViewModel.backOnline = it
-        }
-
-        recipeViewModel.storedSearchQuery.asLiveData().observe(viewLifecycleOwner) {
-            lastSearch ->
-            if (lastSearch.isNotBlank()) {
-                recipeViewModel.searchQuery = lastSearch
-                searchRecipes(lastSearch)
-            } else {
-                loadCachedData()
-            }
         }
 
     }
@@ -123,7 +108,7 @@ class RecipesFragment : Fragment(),
 
     private fun loadCachedData() {
         Log.d(TAG, "Cached data from database requested")
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             recipeViewModel.cachedRecipes.observeOnce(viewLifecycleOwner) {
                     cachedRecipes ->
                 if (cachedRecipes.isNotEmpty() && !args.backFromBottomSheet) {
@@ -155,7 +140,7 @@ class RecipesFragment : Fragment(),
         }
     }
 
-override fun onQueryTextSubmit(searchQuery: String?): Boolean {
+    override fun onQueryTextSubmit(searchQuery: String?): Boolean {
         if (!searchQuery.isNullOrBlank()) {
             searchRecipes(searchQuery)
         }
@@ -232,11 +217,9 @@ override fun onQueryTextSubmit(searchQuery: String?): Boolean {
     private fun showShimmerFX() {
         shimmerFrame.startShimmer();
         shimmerFrame.visibility = View.VISIBLE
-//        shimmerFrame.showShimmer(true)
     }
     private fun stopShimmerFX() {
         shimmerFrame.stopShimmer();
-//        shimmerFrame.hideShimmer()
         shimmerFrame.visibility = View.GONE
     }
 

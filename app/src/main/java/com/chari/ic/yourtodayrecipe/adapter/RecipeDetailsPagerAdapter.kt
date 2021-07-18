@@ -9,7 +9,7 @@ class RecipeDetailsPagerAdapter(
     private val resultBundle: Bundle,
     private val fragments: List<Fragment>,
     private val titles: List<String>,
-    private val fm: FragmentManager
+    fm: FragmentManager
 ): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getCount(): Int {
         return fragments.size

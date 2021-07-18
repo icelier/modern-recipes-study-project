@@ -132,12 +132,12 @@ class RecipeDetailsActivity: AppCompatActivity() {
     }
 
     private fun markFavouriteRecipe(item: MenuItem) {
-        if (!recipeSavedToFavourites) {
+        recipeSavedToFavourites = if (!recipeSavedToFavourites) {
             item.icon.setTint(ContextCompat.getColor(this, R.color.yellow))
-            recipeSavedToFavourites = true
+            true
         } else {
-            item.icon.setTint(ContextCompat.getColor(this, R.color.white))
-            recipeSavedToFavourites = false
+            item.icon.setTint(ContextCompat.getColor(this, R.color.darkGray))
+            false
         }
     }
 

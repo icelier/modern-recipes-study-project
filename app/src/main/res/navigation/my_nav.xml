@@ -25,7 +25,11 @@
         android:id="@+id/favouriteRecipesFragment"
         android:name="com.chari.ic.yourtodayrecipe.view.fragments.favourites.FavouriteRecipesFragment"
         android:label="@string/favourites"
-        tools:layout="@layout/fragment_favourite_recipes" />
+        tools:layout="@layout/fragment_favourite_recipes" >
+        <action
+            android:id="@+id/action_favouriteRecipesFragment_to_recipeDetailsActivity"
+            app:destination="@id/recipeDetailsActivity" />
+    </fragment>
     <fragment
         android:id="@+id/foodJokeFragment"
         android:name="com.chari.ic.yourtodayrecipe.view.fragments.foodjoke.FoodJokeFragment"

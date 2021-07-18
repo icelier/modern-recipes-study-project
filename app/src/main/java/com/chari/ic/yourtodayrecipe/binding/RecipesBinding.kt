@@ -11,32 +11,22 @@ import com.chari.ic.yourtodayrecipe.util.NetworkResult
 object RecipesBinding {
     @BindingAdapter("apiResponse", "cachedState", requireAll = true)
     @JvmStatic
-    fun setErrorImageVisibility(
-        imageView: ImageView,
+    fun setErrorImageAndTextVisibility(
+        view: View,
         responseState: NetworkResult<RecipeResponse>?,
         cachedState: List<RecipeEntity>?
         ) {
-        if (responseState is NetworkResult.Error && cachedState.isNullOrEmpty()) {
-            imageView.visibility = View.VISIBLE
-        }
-        else {
-            imageView.visibility = View.INVISIBLE
-        }
-    }
+            if (responseState == null) {
+                view.visibility = View.VISIBLE
+            }
+            if (responseState is NetworkResult.Error && cachedState.isNullOrEmpty()) {
+                view.visibility = View.VISIBLE
+                if (view is TextView) {
+                    responseState?.message?.let { view.text = it }
+                }
+            } else {
+                view.visibility = View.INVISIBLE
+            }
 
-    @BindingAdapter("apiResponse", "cachedState", requireAll = true)
-    @JvmStatic
-    fun setErrorTextVisibility(
-        textView: TextView,
-        responseState: NetworkResult<RecipeResponse>?,
-        cachedState: List<RecipeEntity>?
-    ) {
-        if (responseState is NetworkResult.Error && cachedState.isNullOrEmpty()) {
-            textView.visibility = View.VISIBLE
-            textView.text = responseState.message
-        }
-        else {
-            textView.visibility = View.INVISIBLE
-        }
     }
 }

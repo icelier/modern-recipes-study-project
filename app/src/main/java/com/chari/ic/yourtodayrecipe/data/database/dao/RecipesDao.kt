@@ -2,7 +2,9 @@ package com.chari.ic.yourtodayrecipe.data.database.dao
 
 import androidx.room.*
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
+import com.chari.ic.yourtodayrecipe.data.database.entities.FoodJokeEntity
 import com.chari.ic.yourtodayrecipe.data.database.entities.RecipeEntity
+import com.chari.ic.yourtodayrecipe.model.FoodJoke
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,4 +26,10 @@ interface RecipesDao {
 
     @Query("DELETE FROM favourites")
     suspend fun deleteAllFavouriteRecipes()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFoodJoke(foodJoke: FoodJokeEntity)
+
+    @Query("SELECT * FROM food_joke ORDER BY id ASC")
+    fun findAllFoodJokes(): Flow<List<FoodJokeEntity>>
 }

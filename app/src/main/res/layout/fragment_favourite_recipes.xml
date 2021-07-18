@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipeViewModel" />
+            type="com.chari.ic.yourtodayrecipe.view.RecipeViewModel" />
         <variable
             name="adapter"
             type="com.chari.ic.yourtodayrecipe.adapter.FavouriteRecipesAdapter" />
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:alpha="0.5"
-            android:text="TextView"
+            android:text="@string/no_saved_recipes"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="invisible"

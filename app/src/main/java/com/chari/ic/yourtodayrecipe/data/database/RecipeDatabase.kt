@@ -6,10 +6,12 @@ import androidx.room.TypeConverters
 import com.chari.ic.yourtodayrecipe.data.database.dao.RecipeConverter
 import com.chari.ic.yourtodayrecipe.data.database.dao.RecipesDao
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
+import com.chari.ic.yourtodayrecipe.data.database.entities.FoodJokeEntity
 import com.chari.ic.yourtodayrecipe.data.database.entities.RecipeEntity
+import com.chari.ic.yourtodayrecipe.model.FoodJoke
 
 @Database(
-    entities = [RecipeEntity::class, FavouritesEntity::class],
+    entities = [RecipeEntity::class, FavouritesEntity::class, FoodJokeEntity::class],
     version = 1,
     exportSchema = false
 )

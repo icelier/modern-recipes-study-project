@@ -19,6 +19,7 @@ import com.chari.ic.yourtodayrecipe.databinding.FragmentRecipesBinding
 import com.chari.ic.yourtodayrecipe.util.NetworkListener
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
 import com.chari.ic.yourtodayrecipe.util.observeOnce
+import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -47,7 +48,7 @@ class RecipesFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRecipesBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = recipeViewModel
 
         recyclerView = binding.recipeRecyclerView
@@ -160,7 +161,7 @@ class RecipesFragment : Fragment(),
             when(result) {
                 is NetworkResult.Success -> {
                     stopShimmerFX()
-                    result.data?.let { recipeAdapter.setData(it) }
+//                    result.data?.let { recipeAdapter.setData(it) }
                 }
                 is NetworkResult.Error -> {
                     stopShimmerFX()
@@ -180,7 +181,7 @@ class RecipesFragment : Fragment(),
     private fun searchRecipes(searchQuery: String) {
         showShimmerFX()
         recipeViewModel.searchRecipes(recipeViewModel.setupSearchQuery(searchQuery))
-        recipeViewModel.recipesSearchResult.observe(viewLifecycleOwner) {
+        recipeViewModel.recipesSearch.observe(viewLifecycleOwner) {
             result ->
             when(result) {
                 is NetworkResult.Success -> {

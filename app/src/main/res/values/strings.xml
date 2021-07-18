@@ -38,4 +38,6 @@
     <string name="save_to_favourites">Save To Favourites</string>
     <string name="delete">Delete</string>
     <string name="delete_all">Delete All</string>
+    <string name="no_saved_recipes">No saved recipes</string>
+    <string name="share">Share</string>
 </resources>

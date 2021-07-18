@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.adapter.FavouriteRecipesAdapter
 import com.chari.ic.yourtodayrecipe.databinding.FragmentFavouriteRecipesBinding
-import com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipeViewModel
+import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,7 +27,7 @@ class FavouriteRecipesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFavouriteRecipesBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = recipeViewModel
         binding.adapter = favouriteRecipesAdapter
 

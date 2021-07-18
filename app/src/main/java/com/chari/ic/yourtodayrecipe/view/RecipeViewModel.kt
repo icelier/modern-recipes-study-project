@@ -1,4 +1,4 @@
-package com.chari.ic.yourtodayrecipe.view.fragments.recipes
+package com.chari.ic.yourtodayrecipe.view
 
 import android.app.Application
 import android.content.Context
@@ -10,7 +10,9 @@ import androidx.lifecycle.*
 import com.chari.ic.yourtodayrecipe.data.DataStoreRepository
 import com.chari.ic.yourtodayrecipe.data.Repository
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
+import com.chari.ic.yourtodayrecipe.data.database.entities.FoodJokeEntity
 import com.chari.ic.yourtodayrecipe.data.database.entities.RecipeEntity
+import com.chari.ic.yourtodayrecipe.model.FoodJoke
 import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 import com.chari.ic.yourtodayrecipe.util.Constants
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
@@ -46,7 +48,7 @@ class RecipeViewModel @Inject constructor(
 
     val storedBackOnline = dataStoreRepository.readBackOnline()
 
-    fun saveBackOnline(backOnline: Boolean) {
+    private fun saveBackOnline(backOnline: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.writeBackOnline(backOnline)
         }
@@ -83,56 +85,113 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
+    val cachedFoodJokes: LiveData<List<FoodJokeEntity>> =
+        repository.localDataSource.findAllFoodJokes().asLiveData()
+
+    private fun insertFoodJoke(foodJoke: FoodJokeEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.localDataSource.insertFoodJoke(foodJoke)
+        }
+    }
+
     /** RETROFIT NETWORK FETCHED DATA */
-    private val recipes: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
-    val recipesResult: LiveData<NetworkResult<RecipeResponse>> = recipes
+    private val recipesResponse: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
+    val recipesResult: LiveData<NetworkResult<RecipeResponse>> = recipesResponse
 
     fun getRecipes(queries: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(queries)
     }
 
     private suspend fun getRecipesSafeCall(queries: Map<String, String>) {
-        recipes.value = NetworkResult.Loading()
+        recipesResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
             try {
                 Log.d(TAG, "Internet connection present")
                 val response = repository.getRecipes(queries)
                 Log.d(TAG, "Handle response")
-                recipes.value = handleFoodRecipeResponse(response)
-                val data = recipes.value!!.data
+                recipesResponse.value = handleFoodRecipeResponse(response)
+                val data = recipesResponse.value!!.data
                 if (data != null) {
                     offlineCacheData(data)
                 }
             } catch (e: Exception) {
-                recipes.value = NetworkResult.Error("Recipes fetch failed")
+                recipesResponse.value = NetworkResult.Error("Recipes fetch failed")
             }
         } else {
-            recipes.value = NetworkResult.Error(message = "No internet connection")
+            recipesResponse.value = NetworkResult.Error(message = "No internet connection")
         }
     }
 
 
-    private val recipesSearch: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
-    val recipesSearchResult: LiveData<NetworkResult<RecipeResponse>> = recipesSearch
+    private val recipesSearchResponse: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
+    val recipesSearch: LiveData<NetworkResult<RecipeResponse>> = recipesSearchResponse
 
     fun searchRecipes(searchQuery: Map<String, String>) = viewModelScope.launch {
         searchRecipesSafeCall(searchQuery)
     }
 
     private suspend fun searchRecipesSafeCall(searchQuery: Map<String, String>) {
-        recipesSearch.value = NetworkResult.Loading()
+        recipesSearchResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
             try {
                 Log.d(TAG, "Internet connection present")
                 val response = repository.searchRecipes(searchQuery)
                 Log.d(TAG, "Handle response")
-                recipesSearch.value = handleFoodRecipeResponse(response)
+                recipesSearchResponse.value = handleFoodRecipeResponse(response)
             } catch (e: Exception) {
-                recipes.value = NetworkResult.Error("Recipes fetch failed")
+                recipesSearchResponse.value = NetworkResult.Error("Recipes fetch failed")
             }
         } else {
-            recipes.value = NetworkResult.Error(message = "No internet connection")
+            recipesSearchResponse.value = NetworkResult.Error(message = "No internet connection")
         }
+    }
+
+    private val foodJokeResponse: MutableLiveData<NetworkResult<FoodJoke>> = MutableLiveData()
+    val foodJoke: LiveData<NetworkResult<FoodJoke>> = foodJokeResponse
+
+    fun getFoodJoke(apiKey: String) = viewModelScope.launch {
+        getFoodJokeSafeCall(apiKey)
+    }
+
+    private suspend fun getFoodJokeSafeCall(apiKey: String) {
+        foodJokeResponse.value = NetworkResult.Loading()
+        if (hasInternetConnection()) {
+            try {
+                Log.d(TAG, "Internet connection present")
+                val response = repository.getFoodJoke(apiKey)
+                Log.d(TAG, "Handle response")
+                foodJokeResponse.value = handleFoodJokeResponse(response)
+
+                val foodJoke = foodJokeResponse.value?.data
+                if (foodJoke != null) {
+                    offlineCacheFoodJoke(foodJoke)
+                }
+            } catch (e: Exception) {
+                foodJokeResponse.value = NetworkResult.Error("FoodJoke fetch failed")
+            }
+        } else {
+            foodJokeResponse.value = NetworkResult.Error(message = "No internet connection")
+        }
+    }
+
+    private fun handleFoodJokeResponse(response: Response<FoodJoke>): NetworkResult<FoodJoke> {
+        Log.d(TAG, "response: ${response.code()} and ${response.body()}")
+        return when {
+            response.message().toString().contains("timeout") ->
+                NetworkResult.Error("Timeout")
+            response.code() == 402 ->
+                NetworkResult.Error("API key incorrect")
+            response.isSuccessful -> {
+                val foodRecipes = response.body()!!
+                NetworkResult.Success(foodRecipes)
+            }
+            else -> NetworkResult.Error(response.message())
+        }
+    }
+
+    private fun offlineCacheFoodJoke(foodJoke: FoodJoke) {
+        val foodJokeEntity = FoodJokeEntity(foodJoke)
+        insertFoodJoke(foodJokeEntity)
     }
 
     fun setupQuery(): HashMap<String, String> {

@@ -35,7 +35,7 @@ class OverviewFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOverviewBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.recipe = currentRecipe
 
         return binding.root

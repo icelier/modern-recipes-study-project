@@ -6,16 +6,6 @@ class Constants {
         const val API_KEY = "e59b72018cb44b90ace600cdc981f597"
         const val BASE_URL = "https://api.spoonacular.com/"
         const val IMAGE_BASE_URL = "https://api.spoonacular.com/cdn/ingredients_100x100/"
-
-        // database
-        const val DATABASE_NAME = "recipes"
-        const val RECIPES_TABLE_NAME = "recipes"
-        const val FAVOURITES_TABLE_NAME = "favourites"
-
-        // Bottom Sheet
-        const val DEFAULT_MEAL_TYPE = "Main course"
-        const val DEFAULT_DIET_TYPE = "Gluten Free"
-
         // request base params
         const val QUERY_TITLE = "query"
         const val QUERY_NUMBER = "number"
@@ -25,6 +15,16 @@ class Constants {
         const val QUERY_ADD_RECIPE_INFO = "addRecipeInformation"
         const val QUERY_FILL_INGREDIENTS = "fillIngredients"
         const val DEFAULT_QUERY_NUMBER = "50"
+
+        // database
+        const val DATABASE_NAME = "recipes"
+        const val RECIPES_TABLE_NAME = "recipes"
+        const val FAVOURITES_TABLE_NAME = "favourites"
+        const val FOOD_JOKE_TABLE_NAME = "food_joke"
+
+        // Bottom Sheet
+        const val DEFAULT_MEAL_TYPE = "Main course"
+        const val DEFAULT_DIET_TYPE = "Gluten Free"
 
         // Data Store
         const val DATA_STORE_NAME = "recipes_preferences"
@@ -37,5 +37,9 @@ class Constants {
 
         // viewPager argument
         const val KEY_RECIPE_BUNDLE = "recipeBundle"
+
+        //FoodJoke sharing
+        const val KEY_SHARED_JOKE = "shareFoodJoke"
+        const val SHARE_TYPE = "text/plain"
     }
 }

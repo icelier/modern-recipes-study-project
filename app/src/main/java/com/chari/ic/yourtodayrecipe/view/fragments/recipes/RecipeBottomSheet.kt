@@ -8,15 +8,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.util.Constants
+import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.util.*
 
 private const val TAG = "RecipeBottomSheet"

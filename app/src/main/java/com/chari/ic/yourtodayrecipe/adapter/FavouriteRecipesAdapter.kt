@@ -11,7 +11,7 @@ import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
 import com.chari.ic.yourtodayrecipe.databinding.FavouriteItemLayoutBinding
 import com.chari.ic.yourtodayrecipe.view.fragments.favourites.FavouriteRecipesFragmentDirections
-import com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipeViewModel
+import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 
@@ -20,7 +20,7 @@ class FavouriteRecipesAdapter(
     private val activity: FragmentActivity,
     private val recipeViewModel: RecipeViewModel
 ) : RecyclerView.Adapter<FavouriteRecipesAdapter.FavouriteRecipesHolder>(),
-        ActionMode.Callback
+    ActionMode.Callback
 {
     private lateinit var actionMode: ActionMode
     private lateinit var rootView: View
@@ -156,7 +156,7 @@ class FavouriteRecipesAdapter(
                 ContextCompat.getColor(activity, backgroundColor)
             )
         holder.itemView.findViewById<MaterialCardView>(R.id.favourite_recipe_card).strokeColor =
-            ContextCompat.getColor(activity, backgroundColor)
+            ContextCompat.getColor(activity, strokeColor)
     }
 
     private fun applyStatusBarColor(color: Int) {

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipeViewModel" />
+            type="com.chari.ic.yourtodayrecipe.view.RecipeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

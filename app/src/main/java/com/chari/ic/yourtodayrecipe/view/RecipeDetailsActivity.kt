@@ -18,7 +18,6 @@ import com.chari.ic.yourtodayrecipe.util.Constants.Companion.KEY_RECIPE_BUNDLE
 import com.chari.ic.yourtodayrecipe.view.fragments.details.IngredientsFragment
 import com.chari.ic.yourtodayrecipe.view.fragments.details.InstructionsFragment
 import com.chari.ic.yourtodayrecipe.view.fragments.details.OverviewFragment
-import com.chari.ic.yourtodayrecipe.view.fragments.recipes.RecipeViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception

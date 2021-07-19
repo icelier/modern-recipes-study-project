@@ -22,6 +22,7 @@ import com.chari.ic.yourtodayrecipe.util.observeOnce
 import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -32,7 +33,7 @@ class RecipesFragment : Fragment(),
 {
     private lateinit var shimmerFrame: ShimmerFrameLayout
     private lateinit var recyclerView: RecyclerView
-    private val recipeAdapter by lazy { RecipeAdapter() }
+    private val recipeAdapter by lazy { RecipeAdapter(RecipeAdapter.DIFF_UTIL_CALLBACK) }
     private val recipeViewModel: RecipeViewModel by lazy {
         ViewModelProvider(requireActivity()).get(RecipeViewModel::class.java)
     }
@@ -42,6 +43,9 @@ class RecipesFragment : Fragment(),
     private val binding get() = _binding!!
 
     private lateinit var networkListener: NetworkListener
+
+    private var databaseLoadJob: Job? = null
+    private var networkLoadJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -109,13 +113,17 @@ class RecipesFragment : Fragment(),
 
     private fun loadCachedData() {
         Log.d(TAG, "Cached data from database requested")
-        viewLifecycleOwner.lifecycleScope.launch {
-            recipeViewModel.cachedRecipes.observeOnce(viewLifecycleOwner) {
+        databaseLoadJob?.cancel()
+
+        databaseLoadJob = viewLifecycleOwner.lifecycleScope.launch {
+            recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
+            recipeViewModel.cachedRecipes.observe(viewLifecycleOwner) {
                     cachedRecipes ->
                 if (cachedRecipes.isNotEmpty() && !args.backFromBottomSheet) {
                     Log.d(TAG, "Cached data from DB received")
                     stopShimmerFX()
-                    recipeAdapter.setData(cachedRecipes[0].recipe)
+                    Log.d(TAG, "${cachedRecipes[0].recipe.results}")
+                    recipeAdapter.submitList(cachedRecipes[0].recipe.results)
                 } else {
                     Log.d(TAG, "No cached data from DB")
                     fetchRecipeNewData()
@@ -155,13 +163,15 @@ class RecipesFragment : Fragment(),
 
     private fun fetchRecipeNewData() {
         Log.d(TAG, "New data from network required")
-        recipeViewModel.getRecipes(recipeViewModel.setupQuery())
+        networkLoadJob?.cancel()
+
+        networkLoadJob = recipeViewModel.getRecipes(recipeViewModel.setupQuery())
+        recipeViewModel.recipesResult.removeObservers(viewLifecycleOwner)
         recipeViewModel.recipesResult.observe(viewLifecycleOwner) {
             result ->
             when(result) {
                 is NetworkResult.Success -> {
                     stopShimmerFX()
-//                    result.data?.let { recipeAdapter.setData(it) }
                 }
                 is NetworkResult.Error -> {
                     stopShimmerFX()
@@ -180,13 +190,16 @@ class RecipesFragment : Fragment(),
 
     private fun searchRecipes(searchQuery: String) {
         showShimmerFX()
-        recipeViewModel.searchRecipes(recipeViewModel.setupSearchQuery(searchQuery))
+        networkLoadJob?.cancel()
+
+        networkLoadJob = recipeViewModel.searchRecipes(recipeViewModel.setupSearchQuery(searchQuery))
+        recipeViewModel.recipesSearch.removeObservers(viewLifecycleOwner)
         recipeViewModel.recipesSearch.observe(viewLifecycleOwner) {
             result ->
             when(result) {
                 is NetworkResult.Success -> {
                     stopShimmerFX()
-                    result.data?.let { recipeAdapter.setData(it) }
+                    result.data?.let { recipeAdapter.submitList(it.results) }
                 }
                 is NetworkResult.Error -> {
                     stopShimmerFX()
@@ -205,11 +218,14 @@ class RecipesFragment : Fragment(),
 
     private fun tryLoadCachedDataIfNoNetworkConnection() {
         Log.d(TAG, "No connection. Cached data from database requested")
-        lifecycleScope.launch {
+        databaseLoadJob?.cancel()
+
+        databaseLoadJob = lifecycleScope.launch {
+            recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
             recipeViewModel.cachedRecipes.observe(viewLifecycleOwner) {
                     cachedRecipes ->
                 if (cachedRecipes.isNotEmpty()) {
-                    recipeAdapter.setData(cachedRecipes[0].recipe)
+                    recipeAdapter.submitList(cachedRecipes[0].recipe.results)
                 }
             }
         }
@@ -221,7 +237,7 @@ class RecipesFragment : Fragment(),
     }
     private fun stopShimmerFX() {
         shimmerFrame.stopShimmer();
-        shimmerFrame.visibility = View.GONE
+        shimmerFrame.visibility = View.INVISIBLE
     }
 
     override fun onDestroy() {

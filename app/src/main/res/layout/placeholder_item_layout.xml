@@ -11,7 +11,7 @@
         android:id="@+id/view2"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:background="@color/mediumGray"
+        android:background="@color/placeholderColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
-        android:background="@color/mediumGray"
+        android:background="@color/placeholderColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@id/view2"
@@ -31,7 +31,7 @@
 
     <View
         android:id="@+id/description_placeholder"
-        android:background="@color/mediumGray"
+        android:background="@color/placeholderColor"
         android:layout_marginTop="12dp"
         android:layout_width="0dp"
         android:layout_height="65dp"
@@ -41,7 +41,7 @@
 
     <View
         android:id="@+id/likes_placeholder"
-        android:background="@color/mediumGray"
+        android:background="@color/placeholderColor"
         android:layout_marginTop="12dp"
         android:layout_width="36dp"
         android:layout_height="36dp"
@@ -50,7 +50,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
     <View
         android:id="@+id/time_placeholder"
-        android:background="@color/mediumGray"
+        android:background="@color/placeholderColor"
         android:layout_marginStart="24dp"
         android:layout_width="36dp"
         android:layout_height="0dp"
@@ -60,7 +60,7 @@
         />
     <View
         android:id="@+id/vegan_placeholder"
-        android:background="@color/mediumGray"
+        android:background="@color/placeholderColor"
         android:layout_marginStart="24dp"
         android:layout_width="36dp"
         android:layout_height="0dp"

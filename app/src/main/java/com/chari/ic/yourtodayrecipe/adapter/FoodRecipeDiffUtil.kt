@@ -8,11 +8,11 @@ class FoodRecipeDiffUtil<T>(
     private val newList: List<T>
 ): DiffUtil.Callback() {
     override fun getOldListSize(): Int {
-        return oldListSize
+        return oldList.size
     }
 
     override fun getNewListSize(): Int {
-        return newListSize
+        return oldList.size
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

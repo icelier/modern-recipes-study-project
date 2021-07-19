@@ -1,5 +1,6 @@
 package com.chari.ic.yourtodayrecipe.data.data_source
 
+import android.util.Log
 import com.chari.ic.yourtodayrecipe.data.database.dao.RecipesDao
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
 import com.chari.ic.yourtodayrecipe.data.database.entities.FoodJokeEntity
@@ -20,7 +21,11 @@ class LocalDataSource @Inject constructor(
     }
 
     fun findAllFavouriteRecipes(): Flow<List<FavouritesEntity>> {
-        return recipeDao.findAllFavouriteRecipes()
+        val favouriteFromDb = recipeDao.findAllFavouriteRecipes()
+        Log.d("LocalDataSource", "favouriteFromDb == null: ${favouriteFromDb == null}")
+
+        return favouriteFromDb
+//        return recipeDao.findAllFavouriteRecipes()
     }
 
     suspend fun insertFavouriteRecipe(favouriteRecipe: FavouritesEntity) {

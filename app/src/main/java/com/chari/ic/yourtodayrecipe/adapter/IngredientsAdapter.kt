@@ -1,5 +1,6 @@
 package com.chari.ic.yourtodayrecipe.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.chari.ic.yourtodayrecipe.model.Ingredient
 import com.chari.ic.yourtodayrecipe.util.Constants.Companion.IMAGE_BASE_URL
 import java.util.*
 
+private const val TAG = "IngredientsAdapter"
 class IngredientsAdapter: RecyclerView.Adapter<IngredientsAdapter.IngredientsViewHolder>() {
     private var ingredients = emptyList<Ingredient>()
 
@@ -25,6 +27,7 @@ class IngredientsAdapter: RecyclerView.Adapter<IngredientsAdapter.IngredientsVie
         private val originalTextView: TextView = itemView.findViewById(R.id.ingredient_original)
 
         fun bind(ingredient: Ingredient) {
+            Log.d(TAG, "$IMAGE_BASE_URL${ingredient.image}")
             imageView.load("$IMAGE_BASE_URL${ingredient.image}") {
                 crossfade(600)
                 error(R.drawable.ic_error_sad)

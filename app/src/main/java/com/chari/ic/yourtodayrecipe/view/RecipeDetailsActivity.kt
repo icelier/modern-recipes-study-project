@@ -1,6 +1,7 @@
 package com.chari.ic.yourtodayrecipe.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.material.tabs.TabLayout
@@ -22,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 
+private const val TAG = "RecipeDetailsActivity"
 @AndroidEntryPoint
 class RecipeDetailsActivity: AppCompatActivity() {
     private lateinit var toolbar: Toolbar
@@ -36,7 +38,7 @@ class RecipeDetailsActivity: AppCompatActivity() {
     }
 
     private var recipeSavedToFavourites = false
-    private var savedRecipeId = 0L
+    private var savedRecipeId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,30 +82,30 @@ class RecipeDetailsActivity: AppCompatActivity() {
         menuInflater.inflate(R.menu.recipe_details_menu, menu)
         val saveToFavouriteItem = menu?.findItem(R.id.save_to_favourites)
         if (saveToFavouriteItem != null) {
-            if (checkSavedFavouriteRecipes()) {
-                markFavouriteRecipe(saveToFavouriteItem)
-            }
+            checkSavedFavouriteRecipes(saveToFavouriteItem)
         }
 
         return true
     }
 
-    private fun checkSavedFavouriteRecipes(): Boolean {
-        var savedToFavourites = false
+    private fun checkSavedFavouriteRecipes(item: MenuItem) {
         recipeViewModel.cachedFavouriteRecipes.observe(this) {
             savedRecipes ->
             try {
+                Log.d(TAG, "${savedRecipes == null} ${savedRecipes.isEmpty()}")
                 for (recipe in savedRecipes) {
                     if (recipe.favouriteRecipe.id == args.recipe.id) {
-                        savedToFavourites = true
                         savedRecipeId = recipe.id
+                        recipeSavedToFavourites = true
+                        Log.d(TAG, "Match in saved recipes found: idFromDb = ${recipe.favouriteRecipe.id}" +
+                                " and to be saved id = ${args.recipe.id}")
+                        markFavouriteRecipe(item)
                     }
                 }
             } catch (e: Exception) {
                 throw Exception("Failed to get recipe id")
             }
         }
-        return savedToFavourites
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -131,11 +133,11 @@ class RecipeDetailsActivity: AppCompatActivity() {
     }
 
     private fun markFavouriteRecipe(item: MenuItem) {
-        recipeSavedToFavourites = if (!recipeSavedToFavourites) {
+        recipeSavedToFavourites = if (recipeSavedToFavourites) {
             item.icon.setTint(ContextCompat.getColor(this, R.color.yellow))
             true
         } else {
-            item.icon.setTint(ContextCompat.getColor(this, R.color.darkGray))
+            item.icon.setTint(ContextCompat.getColor(this, R.color.white))
             false
         }
     }
@@ -145,7 +147,9 @@ class RecipeDetailsActivity: AppCompatActivity() {
             0,
             args.recipe
         )
+        Log.d(TAG, "Recipe to be saved id: ${args.recipe.id}")
         recipeViewModel.insertFavouriteRecipe(favouritesEntity)
+        recipeSavedToFavourites = true
         showSnackBar("Recipe saved")
     }
 
@@ -155,6 +159,7 @@ class RecipeDetailsActivity: AppCompatActivity() {
             args.recipe
         )
         recipeViewModel.deleteFavouriteRecipe(favouritesEntity)
+        recipeSavedToFavourites = false
         showSnackBar("Recipe removed from Favourites")
     }
 }

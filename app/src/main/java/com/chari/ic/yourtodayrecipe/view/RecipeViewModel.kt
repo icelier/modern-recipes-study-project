@@ -180,7 +180,7 @@ class RecipeViewModel @Inject constructor(
             response.message().toString().contains("timeout") ->
                 NetworkResult.Error("Timeout")
             response.code() == 402 ->
-                NetworkResult.Error("API key incorrect")
+                NetworkResult.Error("Probably, you have exhausted your attempts for today...")
             response.isSuccessful -> {
                 val foodRecipes = response.body()!!
                 NetworkResult.Success(foodRecipes)
@@ -202,7 +202,8 @@ class RecipeViewModel @Inject constructor(
             storedMealAndDietTypes.collect { preferences ->
                 mealType = preferences.selectedMealType
                 dietType = preferences.selectedDietType
-                Log.d(TAG, "Values for query collected from datastore")
+                Log.d(TAG, "Values for query collected from datastore: " +
+                        "meal: ${mealType} and diet: $dietType")
             }
         }
 

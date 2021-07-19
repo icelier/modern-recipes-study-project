@@ -6,10 +6,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
 import com.chari.ic.yourtodayrecipe.databinding.FavouriteItemLayoutBinding
+import com.chari.ic.yourtodayrecipe.model.Recipe
 import com.chari.ic.yourtodayrecipe.view.fragments.favourites.FavouriteRecipesFragmentDirections
 import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.google.android.material.card.MaterialCardView
@@ -19,7 +21,7 @@ private const val TAG ="FavouriteRecipesAdapter"
 class FavouriteRecipesAdapter(
     private val activity: FragmentActivity,
     private val recipeViewModel: RecipeViewModel
-) : RecyclerView.Adapter<FavouriteRecipesAdapter.FavouriteRecipesHolder>(),
+) : ListAdapter<FavouritesEntity, FavouriteRecipesAdapter.FavouriteRecipesHolder>(DIFF_UTIL_CALLBACK),
     ActionMode.Callback
 {
     private lateinit var actionMode: ActionMode
@@ -79,11 +81,11 @@ class FavouriteRecipesAdapter(
     }
 
     override fun onBindViewHolder(holder: FavouriteRecipesHolder, position: Int) {
-        holder.bind(favouriteRecipes[position])
+        holder.bind(getItem(position))
     }
 
     override fun getItemCount(): Int {
-        return favouriteRecipes.size
+        return super.getItemCount()
     }
 
     fun setData(newFavouriteRecipes: List<FavouritesEntity>) {
@@ -178,6 +180,17 @@ class FavouriteRecipesAdapter(
     fun clearContextualActionMode() {
         if (this::actionMode.isInitialized) {
             actionMode.finish()
+        }
+    }
+
+    object DIFF_UTIL_CALLBACK:
+        DiffUtil.ItemCallback<FavouritesEntity>() {
+        override fun areItemsTheSame(oldItem: FavouritesEntity, newItem: FavouritesEntity): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: FavouritesEntity, newItem: FavouritesEntity): Boolean {
+            return oldItem == newItem
         }
     }
 }

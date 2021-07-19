@@ -28,6 +28,7 @@
                 android:id="@+id/white_background"
                 android:layout_width="120dp"
                 android:layout_height="0dp"
+                android:background="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -36,6 +37,7 @@
                 android:id="@+id/ingredient_imageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="@id/white_background"
                 app:layout_constraintEnd_toEndOf="@id/white_background"
                 app:layout_constraintStart_toStartOf="@id/white_background"
@@ -73,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="grams"
-                app:layout_constraintBottom_toBottomOf="@+id/ingredient_weight"
+                app:layout_constraintBottom_toBottomOf="@id/ingredient_weight"
                 app:layout_constraintStart_toEndOf="@id/ingredient_weight"
                 app:layout_constraintTop_toTopOf="@id/ingredient_weight" />
 
@@ -85,8 +87,8 @@
                 android:layout_marginEnd="12dp"
                 android:text="Consistency"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/ingredient_weight"
-                app:layout_constraintTop_toBottomOf="@+id/ingredient_weight" />
+                app:layout_constraintStart_toStartOf="@id/ingredient_weight"
+                app:layout_constraintTop_toBottomOf="@id/ingredient_weight" />
 
             <TextView
                 android:id="@+id/ingredient_original"

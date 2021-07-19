@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.chari.ic.yourtodayrecipe.data.database.entities.RecipeEntity
 import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
@@ -17,15 +18,24 @@ object RecipesBinding {
         cachedState: List<RecipeEntity>?
         ) {
             if (responseState == null) {
-                view.visibility = View.VISIBLE
+                view.visibility = View.INVISIBLE
+                return
             }
             if (responseState is NetworkResult.Error && cachedState.isNullOrEmpty()) {
-                view.visibility = View.VISIBLE
+                if (view is ImageView || view is TextView) {
+                    view.visibility = View.VISIBLE
+                } else {
+                    view.visibility = View.INVISIBLE
+                }
                 if (view is TextView) {
-                    responseState?.message?.let { view.text = it }
+                    responseState.message?.let { view.text = it }
                 }
             } else {
-                view.visibility = View.INVISIBLE
+                if (view is RecyclerView) {
+                    view.visibility = View.VISIBLE
+                } else {
+                    view.visibility = View.INVISIBLE
+                }
             }
 
     }

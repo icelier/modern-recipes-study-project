@@ -18,10 +18,6 @@ class OverviewFragment: Fragment() {
     private var _binding: FragmentOverviewBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var recipeImage: ImageView
-    private lateinit var titleTextView: TextView
-    private lateinit var summaryTextView: TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,8 +37,9 @@ class OverviewFragment: Fragment() {
         return binding.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
+
 }

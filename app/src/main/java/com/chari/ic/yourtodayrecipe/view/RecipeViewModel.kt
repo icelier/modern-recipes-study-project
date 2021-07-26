@@ -246,7 +246,7 @@ class RecipeViewModel @Inject constructor(
             response.message().toString().contains("timeout") ->
                 NetworkResult.Error("Timeout")
             response.code() == 402 ->
-                NetworkResult.Error("API key incorrect")
+                NetworkResult.Error("Data restricted")
             response.body()!!.results.isNullOrEmpty() ->
                 NetworkResult.Error("Recipes not found")
             response.isSuccessful -> {

@@ -3,9 +3,9 @@ package com.chari.ic.yourtodayrecipe.view.fragments.recipes
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
@@ -108,6 +108,7 @@ class RecipesFragment : Fragment(),
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(TAG, "onDestroyView")
+        _binding = null
     }
 
     private fun loadCachedData() {
@@ -115,7 +116,7 @@ class RecipesFragment : Fragment(),
         databaseLoadJob?.cancel()
 
         databaseLoadJob = viewLifecycleOwner.lifecycleScope.launch {
-            Log.d(TAG, "CachedRecipes observers: ${recipeViewModel.cachedRecipes.hasObservers()}")
+            Log.d(TAG, "CachedRecipes has observers: ${recipeViewModel.cachedRecipes.hasObservers()}")
             if (recipeViewModel.cachedRecipes.hasObservers()) {
                 recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
             }
@@ -127,6 +128,7 @@ class RecipesFragment : Fragment(),
                     Log.d(TAG, "${cachedRecipes[0].recipe.results}")
                     recipeAdapter.submitList(cachedRecipes[0].recipe.results)
                 } else {
+                    Log.d(TAG, "From BottomSheet? - ${args.backFromBottomSheet}")
                     Log.d(TAG, "No cached data from DB")
                     fetchRecipeNewData()
                 }
@@ -251,8 +253,4 @@ class RecipesFragment : Fragment(),
         shimmerFrame.visibility = View.INVISIBLE
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 }

@@ -18,7 +18,8 @@
         android:theme="@style/SplashScreenStyle"
         android:usesCleartextTraffic="true">
         <activity android:name=".view.MainActivity"
-            android:label="YourTodayRecipe">
+            android:label="YourTodayRecipe"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +28,8 @@
         </activity>
         <activity android:name=".view.RecipeDetailsActivity"
             android:label="RecipeDetails"
-            android:theme="@style/DetailsActivityStyle"/>
+            android:theme="@style/DetailsActivityStyle"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="preloaded_fonts"

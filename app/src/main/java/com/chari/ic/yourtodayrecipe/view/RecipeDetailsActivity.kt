@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navArgs
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.adapter.RecipeDetailsPagerAdapter
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
@@ -20,6 +21,7 @@ import com.chari.ic.yourtodayrecipe.view.fragments.details.IngredientsFragment
 import com.chari.ic.yourtodayrecipe.view.fragments.details.InstructionsFragment
 import com.chari.ic.yourtodayrecipe.view.fragments.details.OverviewFragment
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 
@@ -27,7 +29,7 @@ private const val TAG = "RecipeDetailsActivity"
 @AndroidEntryPoint
 class RecipeDetailsActivity: AppCompatActivity() {
     private lateinit var toolbar: Toolbar
-    private lateinit var pager: ViewPager
+    private lateinit var pager: ViewPager2
     private lateinit var tabLayout: TabLayout
     private lateinit var detailsLayout: ConstraintLayout
 
@@ -69,13 +71,16 @@ class RecipeDetailsActivity: AppCompatActivity() {
         val pagerAdapter = RecipeDetailsPagerAdapter(
             resultBundle,
             fragments,
-            titles,
-            supportFragmentManager
+            this
         )
         pager.adapter = pagerAdapter
 
         tabLayout = findViewById(R.id.tab_layout)
-        tabLayout.setupWithViewPager(pager)
+        TabLayoutMediator(tabLayout, pager) {
+            tab, position -> tab.text = titles[position]
+
+        }.attach()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

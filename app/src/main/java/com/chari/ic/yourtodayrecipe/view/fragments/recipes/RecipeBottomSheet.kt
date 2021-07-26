@@ -87,7 +87,9 @@ class RecipeBottomSheet: BottomSheetDialogFragment() {
     }
 
     private fun updateChipSelected(chipId: Int, chipGroup: ChipGroup) {
+        Log.d(TAG, "in updateChipSelected of BottomSheet")
         if (chipId != 0) {
+            Log.d(TAG, "in updateChipSelected of BottomSheet: chipId != 0 -> checking chip!")
             chipGroup.check(chipId)
         }
     }

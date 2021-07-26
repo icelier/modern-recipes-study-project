@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewmodel"
             type="com.chari.ic.yourtodayrecipe.view.RecipeViewModel" />
@@ -50,7 +51,6 @@
                     android:text="@string/food_joke"
                     android:textColor="@color/titleColor"
                     android:textSize="20sp"
-
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -79,7 +79,8 @@
             android:alpha="0.5"
             android:src="@drawable/ic_error_sad"
             android:visibility="invisible"
-            jokeResponse="@{viewmodel.foodJoke}"
+            jokeResponseError="@{viewmodel.foodJoke}"
+            cachedJokeError="@{viewmodel.cachedFoodJokes}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -94,10 +95,11 @@
             android:layout_marginTop="8dp"
             android:alpha="0.5"
             android:text="@string/sorry"
-            jokeResponse="@{viewmodel.foodJoke}"
+            android:visibility="invisible"
+            jokeResponseError="@{viewmodel.foodJoke}"
+            cachedJokeError="@{viewmodel.cachedFoodJokes}"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@id/food_joke_error_imageView"
             app:layout_constraintStart_toStartOf="@id/food_joke_error_imageView"
             app:layout_constraintTop_toBottomOf="@id/food_joke_error_imageView" />

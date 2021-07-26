@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "302791730093",
+    "project_id": "your-today-recipe",
+    "storage_bucket": "your-today-recipe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302791730093:android:568fa1d04b4d6b7401f724",
+        "android_client_info": {
+          "package_name": "com.chari.ic.yourtodayrecipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302791730093-ilban0c20kap0e4s0ke2lv11d0oa6qr2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKuRcTepPoiKG0kFNHc4Ociu7xvpc9JJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302791730093-ilban0c20kap0e4s0ke2lv11d0oa6qr2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

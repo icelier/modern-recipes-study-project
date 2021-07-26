@@ -1,5 +1,6 @@
 package com.chari.ic.yourtodayrecipe.binding
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,7 +10,9 @@ import com.chari.ic.yourtodayrecipe.data.database.entities.RecipeEntity
 import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
 
+private const val TAG = "RecipesBinding"
 object RecipesBinding {
+
     @BindingAdapter("apiResponse", "cachedState", requireAll = true)
     @JvmStatic
     fun setErrorImageAndTextVisibility(
@@ -17,10 +20,12 @@ object RecipesBinding {
         responseState: NetworkResult<RecipeResponse>?,
         cachedState: List<RecipeEntity>?
         ) {
-            if (responseState == null) {
-                view.visibility = View.INVISIBLE
-                return
-            }
+            Log.d(TAG, "networkResult == null: ${responseState == null}")
+            Log.d(TAG, "cachedRecipes == null: ${cachedState == null}")
+//            if (responseState == null) {
+//                view.visibility = View.INVISIBLE
+//                return
+//            }
             if (responseState is NetworkResult.Error && cachedState.isNullOrEmpty()) {
                 if (view is ImageView || view is TextView) {
                     view.visibility = View.VISIBLE

@@ -96,7 +96,8 @@ class RecipeViewModel @Inject constructor(
 
     /** RETROFIT NETWORK FETCHED DATA */
     private val recipesResponse: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
-    val recipesResult: LiveData<NetworkResult<RecipeResponse>> = recipesResponse
+    val recipesResult : LiveData<NetworkResult<RecipeResponse>> by this::recipesResponse
+//    val recipesResult: LiveData<NetworkResult<RecipeResponse>> = recipesResponse
 
     fun getRecipes(queries: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(queries)
@@ -106,7 +107,7 @@ class RecipeViewModel @Inject constructor(
         recipesResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
             try {
-                Log.d(TAG, "Internet connection present")
+                Log.d(TAG, "has Internet connection: true")
                 val response = repository.getRecipes(queries)
                 Log.d(TAG, "Handle response")
                 recipesResponse.value = handleFoodRecipeResponse(response)
@@ -124,7 +125,8 @@ class RecipeViewModel @Inject constructor(
 
 
     private val recipesSearchResponse: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
-    val recipesSearch: LiveData<NetworkResult<RecipeResponse>> = recipesSearchResponse
+    val recipesSearch : LiveData<NetworkResult<RecipeResponse>> by this::recipesSearchResponse
+//    val recipesSearch: LiveData<NetworkResult<RecipeResponse>> = recipesSearchResponse
 
     fun searchRecipes(searchQuery: Map<String, String>) = viewModelScope.launch {
         searchRecipesSafeCall(searchQuery)
@@ -136,7 +138,6 @@ class RecipeViewModel @Inject constructor(
             try {
                 Log.d(TAG, "Internet connection present")
                 val response = repository.searchRecipes(searchQuery)
-                Log.d(TAG, "Handle response")
                 recipesSearchResponse.value = handleFoodRecipeResponse(response)
             } catch (e: Exception) {
                 recipesSearchResponse.value = NetworkResult.Error("Recipes fetch failed")
@@ -147,7 +148,8 @@ class RecipeViewModel @Inject constructor(
     }
 
     private val foodJokeResponse: MutableLiveData<NetworkResult<FoodJoke>> = MutableLiveData()
-    val foodJoke: LiveData<NetworkResult<FoodJoke>> = foodJokeResponse
+    val foodJoke : LiveData<NetworkResult<FoodJoke>> by this::foodJokeResponse
+//    val foodJoke: LiveData<NetworkResult<FoodJoke>> = foodJokeResponse
 
     fun getFoodJoke(apiKey: String) = viewModelScope.launch {
         getFoodJokeSafeCall(apiKey)
@@ -238,7 +240,8 @@ class RecipeViewModel @Inject constructor(
     }
 
     private fun handleFoodRecipeResponse(response: Response<RecipeResponse>): NetworkResult<RecipeResponse> {
-        Log.d(TAG, "response: ${response.code()} and ${response.body()}")
+        Log.d(TAG, "Handling response: response code: ${response.code()}, body: ${response.body()}")
+        Log.d(TAG, "")
         return when {
             response.message().toString().contains("timeout") ->
                 NetworkResult.Error("Timeout")

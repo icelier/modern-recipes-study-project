@@ -18,7 +18,6 @@ import com.chari.ic.yourtodayrecipe.adapter.RecipeAdapter
 import com.chari.ic.yourtodayrecipe.databinding.FragmentRecipesBinding
 import com.chari.ic.yourtodayrecipe.util.NetworkListener
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
-import com.chari.ic.yourtodayrecipe.util.observeOnce
 import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -116,7 +115,10 @@ class RecipesFragment : Fragment(),
         databaseLoadJob?.cancel()
 
         databaseLoadJob = viewLifecycleOwner.lifecycleScope.launch {
-            recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
+            Log.d(TAG, "CachedRecipes observers: ${recipeViewModel.cachedRecipes.hasObservers()}")
+            if (recipeViewModel.cachedRecipes.hasObservers()) {
+                recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
+            }
             recipeViewModel.cachedRecipes.observe(viewLifecycleOwner) {
                     cachedRecipes ->
                 if (cachedRecipes.isNotEmpty() && !args.backFromBottomSheet) {
@@ -166,7 +168,10 @@ class RecipesFragment : Fragment(),
         networkLoadJob?.cancel()
 
         networkLoadJob = recipeViewModel.getRecipes(recipeViewModel.setupQuery())
-        recipeViewModel.recipesResult.removeObservers(viewLifecycleOwner)
+        if (recipeViewModel.recipesResult.hasObservers()) {
+            recipeViewModel.recipesResult.removeObservers(viewLifecycleOwner)
+        }
+//        recipeViewModel.recipesResult.removeObservers(viewLifecycleOwner)
         recipeViewModel.recipesResult.observe(viewLifecycleOwner) {
             result ->
             when(result) {
@@ -193,7 +198,10 @@ class RecipesFragment : Fragment(),
         networkLoadJob?.cancel()
 
         networkLoadJob = recipeViewModel.searchRecipes(recipeViewModel.setupSearchQuery(searchQuery))
-        recipeViewModel.recipesSearch.removeObservers(viewLifecycleOwner)
+        if (recipeViewModel.recipesSearch.hasObservers()) {
+            recipeViewModel.recipesSearch.removeObservers(viewLifecycleOwner)
+        }
+//        recipeViewModel.recipesSearch.removeObservers(viewLifecycleOwner)
         recipeViewModel.recipesSearch.observe(viewLifecycleOwner) {
             result ->
             when(result) {
@@ -221,7 +229,10 @@ class RecipesFragment : Fragment(),
         databaseLoadJob?.cancel()
 
         databaseLoadJob = lifecycleScope.launch {
-            recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
+            if (recipeViewModel.cachedRecipes.hasObservers()) {
+                recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
+            }
+//            recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
             recipeViewModel.cachedRecipes.observe(viewLifecycleOwner) {
                     cachedRecipes ->
                 if (cachedRecipes.isNotEmpty()) {

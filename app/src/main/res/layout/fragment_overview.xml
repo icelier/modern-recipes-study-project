@@ -9,16 +9,19 @@
             type="com.chari.ic.yourtodayrecipe.model.Recipe" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor"
+        app:layoutDescription="@xml/fragment_overview_xml_constraintlayout_scene">
 
         <ImageView
             android:id="@+id/main_imageView"
+            loadImageFromUrl="@{recipe.image}"
             android:layout_width="0dp"
             android:layout_height="250dp"
             android:scaleType="centerCrop"
-            loadImageFromUrl="@{recipe.image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -48,12 +51,12 @@
 
         <TextView
             android:id="@+id/time_textView"
+            time="@{recipe.readyInMinutes}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="12dp"
             android:hint="100"
-            time="@{recipe.readyInMinutes}"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -73,16 +76,16 @@
 
         <TextView
             android:id="@+id/likes_textView"
+            likes="@{recipe.aggregateLikes}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:hint="100"
-            likes="@{recipe.aggregateLikes}"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/time_textView"
             app:layout_constraintBottom_toBottomOf="@id/time_textView"
+            app:layout_constraintEnd_toStartOf="@id/time_textView"
             app:layout_constraintTop_toTopOf="@id/time_textView" />
 
         <TextView
@@ -103,10 +106,10 @@
 
         <ImageView
             android:id="@+id/vegetarian_check_mark"
+            selected="@{recipe.vegetarian}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            selected="@{recipe.vegetarian}"
             app:layout_constraintStart_toStartOf="@id/title_textView"
             app:layout_constraintTop_toBottomOf="@id/title_textView"
             app:srcCompat="@drawable/ic_check"
@@ -114,11 +117,11 @@
 
         <TextView
             android:id="@+id/vegetarian_textView"
+            selected="@{recipe.vegetarian}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/vegetarian"
-            selected="@{recipe.vegetarian}"
             android:textColor="@color/itemColor"
             app:layout_constraintBottom_toBottomOf="@id/vegetarian_check_mark"
             app:layout_constraintStart_toEndOf="@id/vegetarian_check_mark"
@@ -126,9 +129,9 @@
 
         <ImageView
             android:id="@+id/vegan_check_mark"
+            selected="@{recipe.vegan}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            selected="@{recipe.vegan}"
             android:layout_marginTop="12dp"
             app:layout_constraintStart_toStartOf="@id/vegetarian_check_mark"
             app:layout_constraintTop_toBottomOf="@id/vegetarian_check_mark"
@@ -137,11 +140,11 @@
 
         <TextView
             android:id="@+id/vegan_textView"
+            selected="@{recipe.vegan}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/vegan"
-            selected="@{recipe.vegan}"
             android:textColor="@color/itemColor"
             app:layout_constraintBottom_toBottomOf="@id/vegan_check_mark"
             app:layout_constraintStart_toEndOf="@id/vegan_check_mark"
@@ -149,10 +152,10 @@
 
         <ImageView
             android:id="@+id/gluten_free_check_mark"
+            selected="@{recipe.glutenFree}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            selected="@{recipe.glutenFree}"
             app:layout_constraintBottom_toBottomOf="@id/vegetarian_check_mark"
             app:layout_constraintStart_toEndOf="@id/vegetarian_textView"
             app:layout_constraintTop_toTopOf="@id/vegetarian_check_mark"
@@ -161,11 +164,11 @@
 
         <TextView
             android:id="@+id/gluten_free_textView"
+            selected="@{recipe.glutenFree}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/gluten_free"
-            selected="@{recipe.glutenFree}"
             android:textColor="@color/itemColor"
             app:layout_constraintBottom_toBottomOf="@id/gluten_free_check_mark"
             app:layout_constraintStart_toEndOf="@id/gluten_free_check_mark"
@@ -173,10 +176,10 @@
 
         <ImageView
             android:id="@+id/dairy_free_check_mark"
+            selected="@{recipe.dairyFree}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            selected="@{recipe.dairyFree}"
             app:layout_constraintStart_toStartOf="@id/gluten_free_check_mark"
             app:layout_constraintTop_toBottomOf="@id/gluten_free_check_mark"
             app:srcCompat="@drawable/ic_check"
@@ -184,11 +187,11 @@
 
         <TextView
             android:id="@+id/dairy_free_textView"
+            selected="@{recipe.dairyFree}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/dairy_free"
-            selected="@{recipe.dairyFree}"
             android:textColor="@color/itemColor"
             app:layout_constraintBottom_toBottomOf="@id/dairy_free_check_mark"
             app:layout_constraintStart_toEndOf="@id/dairy_free_check_mark"
@@ -196,10 +199,10 @@
 
         <ImageView
             android:id="@+id/healthy_check_mark"
+            selected="@{recipe.veryHealthy}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            selected="@{recipe.veryHealthy}"
             app:layout_constraintBottom_toBottomOf="@id/gluten_free_check_mark"
             app:layout_constraintStart_toEndOf="@id/gluten_free_textView"
             app:layout_constraintTop_toTopOf="@id/gluten_free_check_mark"
@@ -208,11 +211,11 @@
 
         <TextView
             android:id="@+id/healthy_textView"
+            selected="@{recipe.veryHealthy}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/healthy"
-            selected="@{recipe.veryHealthy}"
             android:textColor="@color/itemColor"
             app:layout_constraintBottom_toBottomOf="@id/healthy_check_mark"
             app:layout_constraintStart_toEndOf="@id/healthy_check_mark"
@@ -220,10 +223,10 @@
 
         <ImageView
             android:id="@+id/cheap_check_mark"
+            selected="@{recipe.cheap}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            selected="@{recipe.cheap}"
             app:layout_constraintStart_toStartOf="@id/healthy_check_mark"
             app:layout_constraintTop_toBottomOf="@id/healthy_check_mark"
             app:srcCompat="@drawable/ic_check"
@@ -231,17 +234,18 @@
 
         <TextView
             android:id="@+id/cheap_textView"
+            selected="@{recipe.cheap}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/cheap"
-            selected="@{recipe.cheap}"
             android:textColor="@color/itemColor"
             app:layout_constraintBottom_toBottomOf="@id/cheap_check_mark"
             app:layout_constraintStart_toEndOf="@id/cheap_check_mark"
             app:layout_constraintTop_toTopOf="@id/cheap_check_mark" />
 
         <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
@@ -259,12 +263,12 @@
 
                 <TextView
                     android:id="@+id/summary_textView"
+                    parseHtml="@{recipe.summary}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    parseHtml="@{recipe.summary}"
                     android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

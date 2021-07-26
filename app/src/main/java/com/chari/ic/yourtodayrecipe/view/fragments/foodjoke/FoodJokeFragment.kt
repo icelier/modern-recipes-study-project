@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.databinding.FragmentFoodJokeBinding
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FoodJokeFragment : Fragment() {
-    private val recipeViewModel: RecipeViewModel by viewModels()
+    private lateinit var recipeViewModel: RecipeViewModel
 
     private var _binding: FragmentFoodJokeBinding? = null
     private val binding get() = _binding!!
@@ -31,6 +32,8 @@ class FoodJokeFragment : Fragment() {
     ): View {
         _binding = FragmentFoodJokeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        recipeViewModel = ViewModelProvider(requireActivity()).get(RecipeViewModel::class.java)
         binding.viewmodel = recipeViewModel
 
         setHasOptionsMenu(true)
@@ -68,7 +71,7 @@ class FoodJokeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             recipeViewModel.cachedFoodJokes.observe(viewLifecycleOwner) {
                     foodJokes ->
-                if (foodJokes.isNotEmpty()) {
+                if (!foodJokes.isNullOrEmpty()) {
                     binding.foodJokeTextView.text = foodJokes[0].foodJoke.joke
                     currentJoke = foodJokes[0].foodJoke.joke
                 }

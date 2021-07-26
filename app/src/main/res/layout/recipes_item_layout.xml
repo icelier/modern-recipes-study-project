@@ -23,6 +23,7 @@
             app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:flow_horizontalBias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/strokeColor"
@@ -32,16 +33,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/cardBackgroundColor">
-
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/image_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.45" />
                 <ImageView
                     android:id="@+id/recipe_imageView"
-                    android:layout_width="200dp"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:scaleType="centerCrop"
                     loadImageFromUrl="@{recipe.image}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/image_guideline"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView

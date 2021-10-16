@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chari.ic.yourtodayrecipe.databinding.RecipesItemLayoutBinding
 import com.chari.ic.yourtodayrecipe.model.Recipe
-import com.chari.ic.yourtodayrecipe.model.RecipeResponse
 
 private const val TAG = "RecipeAdapter"
 class RecipeAdapter(diffUtilCallback: DiffUtil.ItemCallback<Recipe>):

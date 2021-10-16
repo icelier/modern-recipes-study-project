@@ -1,7 +1,9 @@
 package com.chari.ic.yourtodayrecipe.view.fragments.recipes
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -18,6 +20,7 @@ import com.chari.ic.yourtodayrecipe.adapter.RecipeAdapter
 import com.chari.ic.yourtodayrecipe.databinding.FragmentRecipesBinding
 import com.chari.ic.yourtodayrecipe.util.NetworkListener
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
+import com.chari.ic.yourtodayrecipe.util.observeOnce
 import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +28,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-private const val TAG = "RecipesFragment"
 @AndroidEntryPoint
 class RecipesFragment : Fragment(),
     SearchView.OnQueryTextListener
@@ -37,13 +39,13 @@ class RecipesFragment : Fragment(),
         ViewModelProvider(requireActivity()).get(RecipeViewModel::class.java)
     }
     private val args by navArgs<RecipesFragmentArgs>()
+    private var fromBottomSheet = false
 
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var networkListener: NetworkListener
 
-    private var databaseLoadJob: Job? = null
     private var networkLoadJob: Job? = null
 
     override fun onCreateView(
@@ -53,6 +55,7 @@ class RecipesFragment : Fragment(),
         _binding = FragmentRecipesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = recipeViewModel
+        fromBottomSheet = args.backFromBottomSheet
 
         recyclerView = binding.recipeRecyclerView
         shimmerFrame = binding.shimmerFrameLayout
@@ -80,58 +83,45 @@ class RecipesFragment : Fragment(),
             networkListener = NetworkListener()
             networkListener.checkNetworkAvailability(requireContext())
                 .collect { status ->
-                    Log.d(TAG, "Network available: $status")
                     recipeViewModel.networkStatus = status
                     recipeViewModel.showNetworkStatus()
                     loadCachedData()
-
                 }
         }
 
         recipeViewModel.storedBackOnline.asLiveData().observe(viewLifecycleOwner) {
-            Log.d(TAG, " BackOnline liveData got updated: backOnline became $it")
             recipeViewModel.backOnline = it
         }
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop")
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d(TAG, "onDestroyView")
+
         _binding = null
+
+        // unregister network callback to not listen for network changes
+        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            connectivityManager.unregisterNetworkCallback(networkListener)
+        }
+    }
+
+    override fun onDestroy() {
+        networkLoadJob?.cancel()
+
+        super.onDestroy()
     }
 
     private fun loadCachedData() {
-        Log.d(TAG, "Cached data from database requested")
-        databaseLoadJob?.cancel()
-
-        databaseLoadJob = viewLifecycleOwner.lifecycleScope.launch {
-            Log.d(TAG, "CachedRecipes has observers: ${recipeViewModel.cachedRecipes.hasObservers()}")
-            if (recipeViewModel.cachedRecipes.hasObservers()) {
-                recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
-            }
-            recipeViewModel.cachedRecipes.observe(viewLifecycleOwner) {
-                    cachedRecipes ->
-                if (cachedRecipes.isNotEmpty() && !args.backFromBottomSheet) {
-                    Log.d(TAG, "Cached data from DB received")
-                    stopShimmerFX()
-                    Log.d(TAG, "${cachedRecipes[0].recipe.results}")
-                    recipeAdapter.submitList(cachedRecipes[0].recipe.results)
-                } else {
-                    Log.d(TAG, "From BottomSheet? - ${args.backFromBottomSheet}")
-                    Log.d(TAG, "No cached data from DB")
-                    fetchRecipeNewData()
-                }
+        recipeViewModel.cachedRecipes.observe(viewLifecycleOwner) {
+                cachedRecipes ->
+            if (cachedRecipes.isNotEmpty() && !fromBottomSheet) {
+                stopShimmerFX()
+                recipeAdapter.submitList(cachedRecipes[0].recipe.results)
+            } else {
+                fromBottomSheet = false
+                fetchRecipeNewData()
             }
         }
     }
@@ -166,19 +156,19 @@ class RecipesFragment : Fragment(),
     }
 
     private fun fetchRecipeNewData() {
-        Log.d(TAG, "New data from network required")
         networkLoadJob?.cancel()
 
         networkLoadJob = recipeViewModel.getRecipes(recipeViewModel.setupQuery())
         if (recipeViewModel.recipesResult.hasObservers()) {
             recipeViewModel.recipesResult.removeObservers(viewLifecycleOwner)
         }
-//        recipeViewModel.recipesResult.removeObservers(viewLifecycleOwner)
+
         recipeViewModel.recipesResult.observe(viewLifecycleOwner) {
             result ->
             when(result) {
                 is NetworkResult.Success -> {
                     stopShimmerFX()
+                    recipeViewModel.saveMealAndDietTypes()
                 }
                 is NetworkResult.Error -> {
                     stopShimmerFX()
@@ -203,13 +193,12 @@ class RecipesFragment : Fragment(),
         if (recipeViewModel.recipesSearch.hasObservers()) {
             recipeViewModel.recipesSearch.removeObservers(viewLifecycleOwner)
         }
-//        recipeViewModel.recipesSearch.removeObservers(viewLifecycleOwner)
+
         recipeViewModel.recipesSearch.observe(viewLifecycleOwner) {
             result ->
             when(result) {
                 is NetworkResult.Success -> {
                     stopShimmerFX()
-                    result.data?.let { recipeAdapter.submitList(it.results) }
                 }
                 is NetworkResult.Error -> {
                     stopShimmerFX()
@@ -227,19 +216,11 @@ class RecipesFragment : Fragment(),
     }
 
     private fun tryLoadCachedDataIfNoNetworkConnection() {
-        Log.d(TAG, "No connection. Cached data from database requested")
-        databaseLoadJob?.cancel()
 
-        databaseLoadJob = lifecycleScope.launch {
-            if (recipeViewModel.cachedRecipes.hasObservers()) {
-                recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
-            }
-//            recipeViewModel.cachedRecipes.removeObservers(viewLifecycleOwner)
-            recipeViewModel.cachedRecipes.observe(viewLifecycleOwner) {
-                    cachedRecipes ->
-                if (cachedRecipes.isNotEmpty()) {
-                    recipeAdapter.submitList(cachedRecipes[0].recipe.results)
-                }
+        recipeViewModel.cachedRecipes.observeOnce(viewLifecycleOwner) {
+                cachedRecipes ->
+            if (cachedRecipes.isNotEmpty()) {
+                recipeAdapter.submitList(cachedRecipes[0].recipe.results)
             }
         }
     }

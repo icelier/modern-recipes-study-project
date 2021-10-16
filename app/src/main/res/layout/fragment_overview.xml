@@ -51,15 +51,16 @@
 
         <TextView
             android:id="@+id/time_textView"
-            time="@{recipe.readyInMinutes}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="12dp"
             android:hint="100"
+            android:text="@{String.valueOf(recipe.readyInMinutes)}"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@id/main_imageView"
             app:layout_constraintEnd_toEndOf="@id/main_imageView" />
 
@@ -76,14 +77,15 @@
 
         <TextView
             android:id="@+id/likes_textView"
-            likes="@{recipe.aggregateLikes}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:hint="100"
+            android:text="@{String.valueOf(recipe.aggregateLikes)}"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@id/time_textView"
             app:layout_constraintEnd_toStartOf="@id/time_textView"
             app:layout_constraintTop_toTopOf="@id/time_textView" />
@@ -266,6 +268,7 @@
                     parseHtml="@{recipe.summary}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="4dp"
                     android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>

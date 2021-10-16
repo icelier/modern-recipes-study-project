@@ -1,6 +1,5 @@
 package com.chari.ic.yourtodayrecipe.binding
 
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -10,7 +9,6 @@ import com.chari.ic.yourtodayrecipe.model.FoodJoke
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
 import com.google.android.material.card.MaterialCardView
 
-private const val TAG = "FoodJokeBinding"
 object FoodJokeBinding {
     @BindingAdapter("jokeResponse", "cachedJoke", requireAll = false)
     @JvmStatic
@@ -19,59 +17,6 @@ object FoodJokeBinding {
         apiResponse: NetworkResult<FoodJoke>?,
         cachedFoodJokes: List<FoodJokeEntity>?
     ) {
-        Log.d(
-            TAG,
-            "jokeResponse == null: ${apiResponse == null} cachedJoke == null: ${cachedFoodJokes == null}"
-        )
-//        if (cachedFoodJokes.isNullOrEmpty()) {
-//            when (view) {
-//                is
-//            }
-//        }
-//        if (apiResponse is NetworkResult.Loading) {
-//            when (view) {
-//                is ProgressBar -> view.visibility = View.VISIBLE
-//                else -> view.visibility = View.INVISIBLE
-//            }
-//        } else if (apiResponse is NetworkResult.Error && cachedFoodJokes.isNullOrEmpty()) {
-//            if (view is ImageView) {
-//                if (!cachedFoodJokes.isNullOrEmpty()) {
-//                    view.visibility = View.INVISIBLE
-//                } else {
-//                    view.visibility = View.VISIBLE
-//                }
-//            } else if (view is TextView) {
-//                if (!cachedFoodJokes.isNullOrEmpty()) {
-//                    view.visibility = View.INVISIBLE
-//                } else {
-//                    view.visibility = View.VISIBLE
-//                    apiResponse.message?.let { view.text = it }
-//                }
-//            } else if (view is MaterialCardView) {
-//                    view.visibility = if (cachedFoodJokes.isNullOrEmpty()) {
-//                        View.INVISIBLE
-//                    } else {
-//                        View.VISIBLE
-//                    }
-//                } else if (view is ProgressBar) {
-//                    view.visibility = View.INVISIBLE
-//                }
-//            } else if (apiResponse is NetworkResult.Success)  {
-//                when (view) {
-//                    is MaterialCardView -> view.visibility = View.VISIBLE
-//                    else -> view.visibility = View.INVISIBLE
-//                }
-//            }
-//        }
-
-
-//        if (apiResponse == null) {
-//            if (view is TextView || view is ImageView) {
-//                view.visibility = View.VISIBLE
-//            } else {
-//                view.visibility = View.INVISIBLE
-//            }
-//        }
         when (apiResponse) {
             is NetworkResult.Loading -> {
                 when (view) {
@@ -80,7 +25,6 @@ object FoodJokeBinding {
                 }
             }
             is NetworkResult.Error -> {
-                Log.d(TAG, "Network Error: cachedJoke == null: - ${cachedFoodJokes == null}")
                 when (view) {
                     is ProgressBar -> view.visibility = View.INVISIBLE
                     is MaterialCardView -> {
@@ -91,21 +35,6 @@ object FoodJokeBinding {
                             }
                         }
                     }
-//                    is TextView -> {
-//                        if (!cachedFoodJokes.isNullOrEmpty()) {
-//                            view.visibility = View.INVISIBLE
-//                        } else {
-//                            view.visibility = View.VISIBLE
-//                            apiResponse.message?.let { view.text = it }
-//                        }
-//                    }
-//                    is ImageView -> {
-//                        if (!cachedFoodJokes.isNullOrEmpty()) {
-//                            view.visibility = View.INVISIBLE
-//                        } else {
-//                            view.visibility = View.VISIBLE
-//                        }
-//                    }
 
                 }
             }

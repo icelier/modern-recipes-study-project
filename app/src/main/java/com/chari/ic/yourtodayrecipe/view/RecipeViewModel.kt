@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import com.chari.ic.yourtodayrecipe.data.DataStoreRepository
+import com.chari.ic.yourtodayrecipe.data.MealAndDietPreferences
 import com.chari.ic.yourtodayrecipe.data.Repository
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
 import com.chari.ic.yourtodayrecipe.data.database.entities.FoodJokeEntity
@@ -18,7 +19,6 @@ import com.chari.ic.yourtodayrecipe.util.Constants
 import com.chari.ic.yourtodayrecipe.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -35,17 +35,44 @@ class RecipeViewModel @Inject constructor(
     var backOnline = false
 
     /** DATASTORE */
-    private var mealType = Constants.DEFAULT_MEAL_TYPE
-    private var dietType = Constants.DEFAULT_DIET_TYPE
+    private var mealAndDiet = MealAndDietPreferences(
+        Constants.DEFAULT_MEAL_TYPE,
+        0,
+        Constants.DEFAULT_DIET_TYPE,
+        0
+    )
 
     val storedMealAndDietTypes = dataStoreRepository.readMealAndDietTypes()
 
-    fun saveMealAndDietTypes(mealType: String, mealTypeId: Int, dietType: String, dietTypeId: Int) {
+    fun saveMealAndDietTypes() {
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.writeMealAndDietTypes(mealType, mealTypeId, dietType, dietTypeId)
+            dataStoreRepository.writeMealAndDietTypes(
+                mealAndDiet.selectedMealType,
+                mealAndDiet.selectedMealTypeId,
+                mealAndDiet.selectedDietType,
+                mealAndDiet.selectedDietTypeId)
         }
     }
 
+    /**
+     * Used to save chosen meal and diet type chips in the bottomSheet temporarely in case
+     * if network request returns error. In this case chosen meal and diet type
+     * will not be saved into dataStore
+     */
+    fun saveMealAndDietTypesTemp(
+        mealType: String,
+        mealTypeId: Int,
+        dietType: String,
+        dietTypeId: Int) {
+        mealAndDiet = MealAndDietPreferences(
+            mealType,
+            mealTypeId,
+            dietType,
+            dietTypeId
+        )
+    }
+
+    // if network connection lost, identifies network is available again
     val storedBackOnline = dataStoreRepository.readBackOnline()
 
     private fun saveBackOnline(backOnline: Boolean) {
@@ -97,7 +124,6 @@ class RecipeViewModel @Inject constructor(
     /** RETROFIT NETWORK FETCHED DATA */
     private val recipesResponse: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
     val recipesResult : LiveData<NetworkResult<RecipeResponse>> by this::recipesResponse
-//    val recipesResult: LiveData<NetworkResult<RecipeResponse>> = recipesResponse
 
     fun getRecipes(queries: Map<String, String>) = viewModelScope.launch {
         getRecipesSafeCall(queries)
@@ -107,9 +133,7 @@ class RecipeViewModel @Inject constructor(
         recipesResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
             try {
-                Log.d(TAG, "has Internet connection: true")
                 val response = repository.getRecipes(queries)
-                Log.d(TAG, "Handle response")
                 recipesResponse.value = handleFoodRecipeResponse(response)
                 val data = recipesResponse.value!!.data
                 if (data != null) {
@@ -126,7 +150,6 @@ class RecipeViewModel @Inject constructor(
 
     private val recipesSearchResponse: MutableLiveData<NetworkResult<RecipeResponse>> = MutableLiveData()
     val recipesSearch : LiveData<NetworkResult<RecipeResponse>> by this::recipesSearchResponse
-//    val recipesSearch: LiveData<NetworkResult<RecipeResponse>> = recipesSearchResponse
 
     fun searchRecipes(searchQuery: Map<String, String>) = viewModelScope.launch {
         searchRecipesSafeCall(searchQuery)
@@ -136,10 +159,14 @@ class RecipeViewModel @Inject constructor(
         recipesSearchResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
             try {
-                Log.d(TAG, "Internet connection present")
                 val response = repository.searchRecipes(searchQuery)
                 recipesSearchResponse.value = handleFoodRecipeResponse(response)
+                val data = recipesSearchResponse.value!!.data
+                if (data != null) {
+                    offlineCacheData(data)
+                }
             } catch (e: Exception) {
+                e.printStackTrace()
                 recipesSearchResponse.value = NetworkResult.Error("Recipes fetch failed")
             }
         } else {
@@ -149,7 +176,6 @@ class RecipeViewModel @Inject constructor(
 
     private val foodJokeResponse: MutableLiveData<NetworkResult<FoodJoke>> = MutableLiveData()
     val foodJoke : LiveData<NetworkResult<FoodJoke>> by this::foodJokeResponse
-//    val foodJoke: LiveData<NetworkResult<FoodJoke>> = foodJokeResponse
 
     fun getFoodJoke(apiKey: String) = viewModelScope.launch {
         getFoodJokeSafeCall(apiKey)
@@ -182,7 +208,7 @@ class RecipeViewModel @Inject constructor(
             response.message().toString().contains("timeout") ->
                 NetworkResult.Error("Timeout")
             response.code() == 402 ->
-                NetworkResult.Error("Probably, you have exhausted your attempts for today...")
+                NetworkResult.Error("Data limited for today")
             response.isSuccessful -> {
                 val foodRecipes = response.body()!!
                 NetworkResult.Success(foodRecipes)
@@ -199,31 +225,18 @@ class RecipeViewModel @Inject constructor(
     fun setupQuery(): HashMap<String, String> {
         val queries = HashMap<String, String>()
 
-        Log.d(TAG, "in SetupQuery for new Query")
-        viewModelScope.launch {
-            storedMealAndDietTypes.collect { preferences ->
-                mealType = preferences.selectedMealType
-                dietType = preferences.selectedDietType
-                Log.d(TAG, "Values for query collected from datastore: " +
-                        "meal: ${mealType} and diet: $dietType")
-            }
-        }
-
-        Log.d(TAG, "queries update started")
         queries[Constants.QUERY_NUMBER] = Constants.DEFAULT_QUERY_NUMBER
         queries[Constants.QUERY_API_KEY] = Constants.API_KEY
-        queries[Constants.QUERY_TYPE] = mealType
-        queries[Constants.QUERY_DIET] = dietType
+        queries[Constants.QUERY_MEAL] = mealAndDiet.selectedMealType
+        queries[Constants.QUERY_DIET] = mealAndDiet.selectedDietType
         queries[Constants.QUERY_ADD_RECIPE_INFO] = "true"
         queries[Constants.QUERY_FILL_INGREDIENTS] = "true"
-        Log.d(TAG, "queries update finished")
 
         return queries
     }
 
     fun setupSearchQuery(searchQuery: String): HashMap<String, String> {
         val queries = HashMap<String, String>()
-        Log.d(TAG, "in setupSearchQuery for new Search Query")
 
         queries[Constants.QUERY_TITLE] = searchQuery
         queries[Constants.QUERY_NUMBER] = Constants.DEFAULT_QUERY_NUMBER
@@ -240,13 +253,11 @@ class RecipeViewModel @Inject constructor(
     }
 
     private fun handleFoodRecipeResponse(response: Response<RecipeResponse>): NetworkResult<RecipeResponse> {
-        Log.d(TAG, "Handling response: response code: ${response.code()}, body: ${response.body()}")
-        Log.d(TAG, "")
         return when {
             response.message().toString().contains("timeout") ->
                 NetworkResult.Error("Timeout")
             response.code() == 402 ->
-                NetworkResult.Error("Data restricted")
+                NetworkResult.Error("Data limited for today")
             response.body()!!.results.isNullOrEmpty() ->
                 NetworkResult.Error("Recipes not found")
             response.isSuccessful -> {

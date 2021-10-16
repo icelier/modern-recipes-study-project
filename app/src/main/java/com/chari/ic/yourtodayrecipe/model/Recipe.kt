@@ -8,35 +8,35 @@ import kotlinx.parcelize.RawValue
 @Parcelize
 data class Recipe (
     @SerializedName("aggregateLikes")
-    val aggregateLikes: Int,
+    var aggregateLikes: Int = 0,
     @SerializedName("cheap")
-    val cheap: Boolean,
+    var cheap: Boolean = false,
     @SerializedName("dairyFree")
-    val dairyFree: Boolean,
+    var dairyFree: Boolean = false,
     @SerializedName("extendedIngredients")
-    val extendedIngredients: @RawValue List<Ingredient>,
+    var extendedIngredients: @RawValue List<Ingredient> = emptyList(),
     @SerializedName("glutenFree")
-    val glutenFree: Boolean,
+    var glutenFree: Boolean = false,
     @SerializedName("id")
-    val id: Int,
+    var id: Int = 0,
     @SerializedName("image")
-    val image: String,
+    var image: String = "",
     @SerializedName("readyInMinutes")
-    val readyInMinutes: Int,
+    var readyInMinutes: Int = 0,
     @SerializedName("sourceName")
-    val sourceName: String?,
+    var sourceName: String?,
     @SerializedName("sourceUrl")
-    val sourceUrl: String,
+    var sourceUrl: String = "",
     @SerializedName("summary")
-    val summary: String,
+    var summary: String = "",
     @SerializedName("title")
-    val title: String,
+    var title: String = "",
     @SerializedName("vegan")
-    val vegan: Boolean,
+    var vegan: Boolean = false,
     @SerializedName("vegetarian")
-    val vegetarian: Boolean,
+    var vegetarian: Boolean = false,
     @SerializedName("veryHealthy")
-    val veryHealthy: Boolean
+    var veryHealthy: Boolean = false
 ): Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

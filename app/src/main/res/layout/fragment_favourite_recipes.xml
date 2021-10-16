@@ -1,10 +1,21 @@
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/backgroundColor"
-    tools:context=".view.fragments.favourites.FavouriteRecipesFragment"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.chari.ic.yourtodayrecipe.view.RecipeViewModel" />
+        <variable
+            name="adapter"
+            type="com.chari.ic.yourtodayrecipe.adapter.FavouriteRecipesAdapter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor"
+        tools:context=".view.fragments.favourites.FavouriteRecipesFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favourites_recycler_view"
@@ -12,6 +23,8 @@
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            setVisibility="@{viewmodel.cachedFavouriteRecipes}"
+            setData="@{adapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -24,6 +37,7 @@
             android:alpha="0.5"
             android:src="@drawable/ic_menu_book"
             android:visibility="invisible"
+            setVisibility="@{viewmodel.cachedFavouriteRecipes}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -41,8 +55,10 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="invisible"
+            setVisibility="@{viewmodel.cachedFavouriteRecipes}"
             app:layout_constraintEnd_toEndOf="@id/no_data_imageView"
             app:layout_constraintStart_toStartOf="@id/no_data_imageView"
             app:layout_constraintTop_toBottomOf="@id/no_data_imageView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
 <!--</layout>-->

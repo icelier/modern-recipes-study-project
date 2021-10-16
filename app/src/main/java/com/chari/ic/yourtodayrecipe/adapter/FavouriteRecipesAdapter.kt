@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
 import com.chari.ic.yourtodayrecipe.databinding.FavouriteItemLayoutBinding
-import com.chari.ic.yourtodayrecipe.model.Recipe
 import com.chari.ic.yourtodayrecipe.view.fragments.favourites.FavouriteRecipesFragmentDirections
 import com.chari.ic.yourtodayrecipe.view.RecipeViewModel
 import com.google.android.material.card.MaterialCardView
@@ -26,8 +25,6 @@ class FavouriteRecipesAdapter(
 {
     private lateinit var actionMode: ActionMode
     private lateinit var rootView: View
-
-    private var favouriteRecipes = emptyList<FavouritesEntity>()
 
     private var multiSelection = false
     private var selectedRecipes = arrayListOf<FavouritesEntity>()
@@ -62,14 +59,18 @@ class FavouriteRecipesAdapter(
                     selectRecipe(this, favouriteEntity)
                     true
                 } else {
-                    multiSelection = false
-                    false
+                    selectRecipe(this, favouriteEntity)
+//                    multiSelection = false
+//                    false
+                    true
                 }
 
             }
 
             binding.favourite = favouriteEntity
             binding.executePendingBindings()
+
+            saveItemStateScroll(this, favouriteEntity)
         }
 
     }
@@ -84,21 +85,13 @@ class FavouriteRecipesAdapter(
         holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return super.getItemCount()
-    }
-
-    fun setData(newFavouriteRecipes: List<FavouritesEntity>) {
-        val diffUtil = FoodRecipeDiffUtil(favouriteRecipes, newFavouriteRecipes)
-        val result = DiffUtil.calculateDiff(diffUtil)
-        favouriteRecipes = newFavouriteRecipes
-        result.dispatchUpdatesTo(this)
-    }
-
     private fun handleActionModeByRecipesSelected() {
         when (selectedRecipes.size) {
-            0 -> actionMode.finish()
-            1 -> actionMode.title = "${selectedRecipes.size} item(s) selected"
+            0 -> {
+                actionMode.finish()
+                multiSelection = false
+            }
+            else -> actionMode.title = "${selectedRecipes.size} item(s) selected"
         }
     }
 
@@ -125,27 +118,45 @@ class FavouriteRecipesAdapter(
         return true
     }
 
-    private fun selectRecipe(
+    private fun saveItemStateScroll(
         holder: FavouriteRecipesAdapter.FavouriteRecipesHolder,
-        favouriteEntity: FavouritesEntity
+        favouriteRecipe: FavouritesEntity
     ) {
-        if (selectedRecipes.contains(favouriteEntity)) {
-            selectedRecipes.remove(favouriteEntity)
+        if (selectedRecipes.contains(favouriteRecipe)) {
             changeRecipeStyle(
                 holder,
                 R.color.cardBackgroundLightColor,
                 R.color.colorPrimary
             )
-            handleActionModeByRecipesSelected()
         } else {
-            selectedRecipes.add(favouriteEntity)
             changeRecipeStyle(
                 holder,
                 R.color.cardBackgroundColor,
                 R.color.strokeColor
             )
-            handleActionModeByRecipesSelected()
         }
+    }
+
+    private fun selectRecipe(
+        holder: FavouriteRecipesAdapter.FavouriteRecipesHolder,
+        favouriteRecipe: FavouritesEntity
+    ) {
+        if (selectedRecipes.contains(favouriteRecipe)) {
+            selectedRecipes.remove(favouriteRecipe)
+            changeRecipeStyle(
+                holder,
+                R.color.cardBackgroundColor,
+                R.color.strokeColor
+            )
+        } else {
+            selectedRecipes.add(favouriteRecipe)
+            changeRecipeStyle(
+                holder,
+                R.color.cardBackgroundLightColor,
+                R.color.colorPrimary
+            )
+        }
+        handleActionModeByRecipesSelected()
     }
 
     private fun changeRecipeStyle (

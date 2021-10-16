@@ -1,7 +1,6 @@
 package com.chari.ic.yourtodayrecipe.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.chari.ic.yourtodayrecipe.model.Recipe
 
 class FoodRecipeDiffUtil<T>(
     private val oldList: List<T>,

@@ -1,7 +1,6 @@
 package com.chari.ic.yourtodayrecipe.view.fragments.recipes
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import java.util.*
 
-private const val TAG = "RecipeBottomSheet"
 class RecipeBottomSheet: BottomSheetDialogFragment() {
     private lateinit var recipeViewModel: RecipeViewModel
 
@@ -60,24 +58,19 @@ class RecipeBottomSheet: BottomSheetDialogFragment() {
         }
 
         mealChipGroup.setOnCheckedChangeListener { group, checkedChipId ->
-            Log.d(TAG, "MealGroup: checked id = $checkedChipId group = $group")
             val chip = group.findViewById<Chip>(checkedChipId)
-            Log.d(TAG, "chip = null - ${chip == null}")
             selectedMealType = chip.text.toString().lowercase(Locale.ROOT)
             selectedMealTypeId = checkedChipId
         }
 
         dietChipGroup.setOnCheckedChangeListener { group, checkedChipId ->
-            Log.d(TAG, "DietGroup: checked id = $checkedChipId group = $group")
             val chip = group.findViewById<Chip>(checkedChipId)
-            Log.d(TAG, "chip = null - ${chip == null}")
             selectedDietType = chip.text.toString().lowercase(Locale.ROOT)
             selectedDietTypeId = checkedChipId
         }
 
         applyBtn.setOnClickListener {
-            Log.d(TAG, "meal and diet updated in UI")
-            recipeViewModel.saveMealAndDietTypes(
+            recipeViewModel.saveMealAndDietTypesTemp(
                 selectedMealType, selectedMealTypeId,
                 selectedDietType, selectedDietTypeId
             )
@@ -87,10 +80,10 @@ class RecipeBottomSheet: BottomSheetDialogFragment() {
     }
 
     private fun updateChipSelected(chipId: Int, chipGroup: ChipGroup) {
-        Log.d(TAG, "in updateChipSelected of BottomSheet")
         if (chipId != 0) {
-            Log.d(TAG, "in updateChipSelected of BottomSheet: chipId != 0 -> checking chip!")
-            chipGroup.check(chipId)
+            val chip = chipGroup.findViewById<Chip>(chipId)
+            chip.isChecked = true
+            chipGroup.requestChildFocus(chip, chip)
         }
     }
 }

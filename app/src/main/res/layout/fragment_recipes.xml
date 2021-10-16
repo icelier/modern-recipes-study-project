@@ -17,8 +17,8 @@
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:orientation="vertical"
@@ -31,7 +31,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <!--add  several shimmer placeholder layout -->
@@ -48,12 +48,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recipe_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            apiResponse="@{viewmodel.recipesResult}"
-            cachedState="@{viewmodel.cachedRecipes}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +68,8 @@
             android:src="@drawable/ic_restaurant"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            android:contentDescription="@string/choose_meal_and_diet_type"/>
 
         <ImageView
             android:id="@+id/error_imageview"
@@ -85,7 +84,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/shimmer_frame_layout"
-            app:layout_constraintVertical_bias="0.45" />
+            app:layout_constraintVertical_bias="0.45"
+            android:contentDescription="@string/download_error"/>
 
         <TextView
             android:id="@+id/textview"

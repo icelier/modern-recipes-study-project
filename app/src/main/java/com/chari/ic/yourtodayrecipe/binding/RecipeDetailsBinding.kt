@@ -6,7 +6,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.chari.ic.yourtodayrecipe.R
-import org.jsoup.Jsoup
 
 object RecipeDetailsBinding {
     @BindingAdapter("selected")

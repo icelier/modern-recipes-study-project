@@ -28,11 +28,16 @@ object RecipesRowBinding {
 
     @BindingAdapter("onRecipeSelected")
     @JvmStatic
-    fun getRecipeDetails(recipeItemView: ConstraintLayout, recipe: Recipe) {
+    fun getRecipeDetails(recipeItemView: ConstraintLayout, recipe: Recipe?) {
         recipeItemView.setOnClickListener {
             try {
-                val action = RecipesFragmentDirections.actionRecipesFragmentToRecipeDetailsActivity(recipe)
-                recipeItemView.findNavController().navigate(action)
+                if (recipe != null) {
+                    val action =
+                        RecipesFragmentDirections.actionRecipesFragmentToRecipeDetailsActivity(
+                            recipe
+                        )
+                    recipeItemView.findNavController().navigate(action)
+                }
             } catch (e: Exception) {
                 Log.e(TAG, e.toString())
             }
@@ -46,18 +51,6 @@ object RecipesRowBinding {
             crossfade(600)
             error(R.drawable.ic_error_sad)
         }
-    }
-
-    @BindingAdapter("likes")
-    @JvmStatic
-    fun setLikes(textView: TextView, likes: Int) {
-        textView.text = likes.toString()
-    }
-
-    @BindingAdapter("time")
-    @JvmStatic
-    fun setCookingTime(textView: TextView, cookingTimeInMinutes: Int) {
-        textView.text = cookingTimeInMinutes.toString()
     }
 
     @BindingAdapter("vegan")

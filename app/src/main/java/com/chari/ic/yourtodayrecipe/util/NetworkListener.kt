@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,10 +20,16 @@ class NetworkListener(): ConnectivityManager.NetworkCallback() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             connectivityManager.registerDefaultNetworkCallback(this)
         } else {
-            // TODO
+            // could filter using .addCapability(int) or .addTransportType(int) on Builder
+//            val networkChangeFilter = NetworkRequest.Builder().build()
+            connectivityManager.registerNetworkCallback(
+                NetworkRequest.Builder().build(),
+                this
+            )
         }
 
         var isConnected = false
+
         connectivityManager.allNetworks.forEach { network ->
             val capabilities = connectivityManager.getNetworkCapabilities(network)
             if (capabilities != null) {

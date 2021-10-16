@@ -14,7 +14,7 @@
         app:layout_constraintGuide_percent="0.45" />
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/image_view_placeholder"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/placeholderColor"
@@ -33,7 +33,7 @@
         android:background="@color/placeholderColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/view2"
+        app:layout_constraintStart_toEndOf="@id/image_view_placeholder"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View

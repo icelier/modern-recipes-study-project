@@ -22,10 +22,8 @@ class LocalDataSource @Inject constructor(
 
     fun findAllFavouriteRecipes(): Flow<List<FavouritesEntity>> {
         val favouriteFromDb = recipeDao.findAllFavouriteRecipes()
-        Log.d("LocalDataSource", "favouriteFromDb == null: ${favouriteFromDb == null}")
 
         return favouriteFromDb
-//        return recipeDao.findAllFavouriteRecipes()
     }
 
     suspend fun insertFavouriteRecipe(favouriteRecipe: FavouritesEntity) {

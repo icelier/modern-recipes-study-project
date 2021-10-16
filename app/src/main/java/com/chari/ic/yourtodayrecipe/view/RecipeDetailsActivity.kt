@@ -1,7 +1,6 @@
 package com.chari.ic.yourtodayrecipe.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.material.tabs.TabLayout
@@ -11,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navArgs
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.chari.ic.yourtodayrecipe.R
 import com.chari.ic.yourtodayrecipe.adapter.RecipeDetailsPagerAdapter
@@ -25,7 +23,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 
-private const val TAG = "RecipeDetailsActivity"
 @AndroidEntryPoint
 class RecipeDetailsActivity: AppCompatActivity() {
     private lateinit var toolbar: Toolbar
@@ -66,7 +63,7 @@ class RecipeDetailsActivity: AppCompatActivity() {
             "Instructions"
         )
         val resultBundle = Bundle()
-        resultBundle.putParcelable(KEY_RECIPE_BUNDLE, args.recipe)
+        args.let { resultBundle.putParcelable(KEY_RECIPE_BUNDLE, args.recipe) }
 
         val pagerAdapter = RecipeDetailsPagerAdapter(
             resultBundle,
@@ -78,8 +75,8 @@ class RecipeDetailsActivity: AppCompatActivity() {
         tabLayout = findViewById(R.id.tab_layout)
         TabLayoutMediator(tabLayout, pager) {
             tab, position -> tab.text = titles[position]
-
-        }.attach()
+        }
+            .attach()
 
     }
 
@@ -97,15 +94,12 @@ class RecipeDetailsActivity: AppCompatActivity() {
         recipeViewModel.cachedFavouriteRecipes.observe(this) {
             savedRecipes ->
             try {
-                Log.d(TAG, "${savedRecipes == null} ${savedRecipes.isEmpty()}")
                 for (recipe in savedRecipes) {
                     if (recipe.favouriteRecipe.id == args.recipe.id) {
                         savedRecipeId = recipe.id
                         recipeSavedToFavourites = true
-                        Log.d(TAG, "Match in saved recipes found: idFromDb = ${recipe.favouriteRecipe.id}" +
-                                " and to be saved id = ${args.recipe.id}")
-                        markFavouriteRecipe(item)
                     }
+                    markFavouriteRecipe(item)
                 }
             } catch (e: Exception) {
                 throw Exception("Failed to get recipe id")
@@ -138,12 +132,10 @@ class RecipeDetailsActivity: AppCompatActivity() {
     }
 
     private fun markFavouriteRecipe(item: MenuItem) {
-        recipeSavedToFavourites = if (recipeSavedToFavourites) {
+         if (recipeSavedToFavourites) {
             item.icon.setTint(ContextCompat.getColor(this, R.color.yellow))
-            true
         } else {
             item.icon.setTint(ContextCompat.getColor(this, R.color.white))
-            false
         }
     }
 
@@ -152,7 +144,7 @@ class RecipeDetailsActivity: AppCompatActivity() {
             0,
             args.recipe
         )
-        Log.d(TAG, "Recipe to be saved id: ${args.recipe.id}")
+
         recipeViewModel.insertFavouriteRecipe(favouritesEntity)
         recipeSavedToFavourites = true
         showSnackBar("Recipe saved")

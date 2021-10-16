@@ -1,7 +1,5 @@
 package com.chari.ic.yourtodayrecipe.data
 
-import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import com.chari.ic.yourtodayrecipe.util.Constants
@@ -11,7 +9,6 @@ import com.chari.ic.yourtodayrecipe.util.Constants.Companion.SELECTED_DIET_TYPE
 import com.chari.ic.yourtodayrecipe.util.Constants.Companion.SELECTED_DIET_TYPE_ID
 import com.chari.ic.yourtodayrecipe.util.Constants.Companion.SELECTED_MEAL_TYPE
 import com.chari.ic.yourtodayrecipe.util.Constants.Companion.SELECTED_MEAL_TYPE_ID
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,10 +16,8 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-private const val TAG = "DataStoreRepository"
 @ActivityRetainedScoped
 class DataStoreRepository @Inject constructor(
-    @ApplicationContext context: Context,
     private val dataStore: DataStore<Preferences>
 ) {
 
@@ -36,7 +31,6 @@ class DataStoreRepository @Inject constructor(
     }
 
     suspend fun writeMealAndDietTypes(mealType: String, mealTypeId: Int, dietType: String, dietTypeId: Int) {
-        Log.d(TAG, "DataStore updating meal and diet")
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.selectedMealType] = mealType
             preferences[PreferencesKeys.selectedMealTypeId] = mealTypeId
@@ -70,7 +64,6 @@ class DataStoreRepository @Inject constructor(
         }
 
     fun readMealAndDietTypes(): Flow<MealAndDietPreferences> {
-//        Log.d(TAG, "DataStore: reading meal and diet")
         return dataStore.data
             .catch { exception ->
                 if (exception is IOException) {
@@ -104,7 +97,6 @@ class DataStoreRepository @Inject constructor(
                 backOnline
             }
     }
-
 }
 
 data class MealAndDietPreferences(

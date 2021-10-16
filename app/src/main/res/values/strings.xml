@@ -40,4 +40,7 @@
     <string name="delete_all">Delete All</string>
     <string name="no_saved_recipes">No saved recipes</string>
     <string name="share">Share</string>
+    <string name="choose_meal_and_diet_type">Choose meal and diet type</string>
+    <string name="download_error">Download error</string>
+    <string name="recipe_bottom_sheet">RecipeBottomSheet</string>
 </resources>

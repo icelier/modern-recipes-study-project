@@ -4,7 +4,6 @@ import androidx.room.*
 import com.chari.ic.yourtodayrecipe.data.database.entities.FavouritesEntity
 import com.chari.ic.yourtodayrecipe.data.database.entities.FoodJokeEntity
 import com.chari.ic.yourtodayrecipe.data.database.entities.RecipeEntity
-import com.chari.ic.yourtodayrecipe.model.FoodJoke
 import kotlinx.coroutines.flow.Flow
 
 @Dao
